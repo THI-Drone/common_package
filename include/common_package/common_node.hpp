@@ -32,6 +32,15 @@ public:
     // Create a timer that sends a heartbeat message every 500ms
     timer_ = this->create_wall_timer(500ms, std::bind(&CommonNode::timer_callback, this));
   }
+  
+  /// @brief Getter for the node id
+  /// @return Node id as char*
+  char* get_id() const {
+    return id;
+  }
+
+protected:
+  bool active = false;  ///< Indicating if node is currently active and sending commands to interface node
 
 private:
   /**

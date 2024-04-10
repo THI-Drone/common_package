@@ -12,7 +12,7 @@
 void CommonNode::timer_callback() {
     auto message = interfaces::msg::Heartbeat();
     message.sender_id = id;
-    message.active = false;
+    message.active = active;
     message.tick = ++tick_;
     publisher_->publish(message);
 }
