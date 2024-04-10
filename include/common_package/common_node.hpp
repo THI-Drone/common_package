@@ -23,20 +23,14 @@ public:
    * @brief Constructor for creating a new CommonNode.
    * @param id Unique name of the node.
    */
-  CommonNode(char* id) : Node(id) {
-    this->id = id;
+  CommonNode(std::string id) : Node(id) {
+    //this->id = id;
 
     // Create a publisher for the "heartbeat" topic
     publisher_ = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
 
     // Create a timer that sends a heartbeat message every 500ms
     timer_ = this->create_wall_timer(500ms, std::bind(&CommonNode::timer_callback, this));
-  }
-  
-  /// @brief Getter for the node id
-  /// @return Node id as char*
-  char* get_id() const {
-    return id;
   }
 
 protected:

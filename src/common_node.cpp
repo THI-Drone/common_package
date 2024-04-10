@@ -11,7 +11,7 @@
  */
 void CommonNode::timer_callback() {
     auto message = interfaces::msg::Heartbeat();
-    message.sender_id = id;
+    message.sender_id = this->get_fully_qualified_name();
     message.active = active;
     message.tick = ++tick_;
     publisher_->publish(message);
