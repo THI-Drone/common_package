@@ -6,7 +6,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "interfaces/msg/Heartbeat.hpp"
+#include "interfaces/msg/heartbeat.hpp"
 
 using namespace std::chrono_literals;
 
