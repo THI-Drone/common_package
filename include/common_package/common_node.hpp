@@ -24,8 +24,6 @@ public:
    * @param id Unique name of the node.
    */
   CommonNode(std::string id) : Node(id) {
-    //this->id = id;
-
     // Create a publisher for the "heartbeat" topic
     publisher_ = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
 
