@@ -1,7 +1,7 @@
 #include "common_package/common_node.hpp"
 
 
-/*
+/**
  * @brief Callback function for the timer.
  * 
  * This function is called when the timer expires. It creates a Heartbeat message,
@@ -20,7 +20,7 @@ void CommonNode::timer_callback() {
     RCLCPP_INFO(this->get_logger(), "Send heartbeat with seq: %d and marked as: %s", message.seq, message.active ? "active" : "inactive");
 }
 
-/*
+/**
  * @brief Setter for active flag.
  *
  * This functions activates the node
@@ -32,7 +32,7 @@ void CommonNode::activate() {
     RCLCPP_DEBUG(this->get_logger(), "Activated node");
 }
 
-/*
+/**
  * @brief Setter for active flag.
  *
  * This functions deactivates the node

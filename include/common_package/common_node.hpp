@@ -14,7 +14,7 @@
 
 #include "interfaces/msg/heartbeat.hpp"
 
-/*
+/**
  * @class CommonNode
  * @brief A class representing a common node.
  *
@@ -22,12 +22,18 @@
  */
 class CommonNode : public rclcpp::Node {
 public:
-    /*
+    /**
      * @brief Constructor for creating a new CommonNode.
      * @param id Unique name of the node.
      * @param options Optional options for the Node
      */
     CommonNode(const std::string &id, const rclcpp::NodeOptions &options = rclcpp::NodeOptions()) : Node(id, options) {
+
+        this->critical_callbacks = this->create_callback_group(
+                rclcpp::CallbackGroupType::MutuallyExclusive,
+                true
+        );
+
         const auto heartbeat_rate = std::chrono::duration<uint32_t, std::milli>(this->declare_parameter("heartbeat_rate", 500));
         RCLCPP_DEBUG(this->get_logger(), "Got heartbeat rate: %" PRIu32 "ms", heartbeat_rate.count());
 
@@ -52,23 +58,25 @@ public:
         RCLCPP_DEBUG(this->get_logger(), "Create heartbeat publisher");
 
         // Create a timer that sends a heartbeat message every 500ms
-        this->heartbeat_timer = this->create_wall_timer(heartbeat_rate, std::bind(&CommonNode::timer_callback, this));
+        this->heartbeat_timer = this->create_wall_timer(heartbeat_rate, std::bind(&CommonNode::timer_callback, this), this->critical_callbacks);
         RCLCPP_DEBUG(this->get_logger(), "Created heartbeat timer");
     }
 
+    rclcpp::CallbackGroup::SharedPtr critical_callbacks;  ///< Callback group for callbacks that should block the heartbeat.
+
 protected:
-    /*
+    /**
      * @brief Setter for active
      */
     void activate();
 
-    /*
+    /**
      * @brief Setter for active
      */
     void deactivate();
 
 private:
-    /*
+    /**
      * @brief Callback function for the timer.
      */
     void timer_callback();
