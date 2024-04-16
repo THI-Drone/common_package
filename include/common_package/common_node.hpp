@@ -29,11 +29,11 @@ public:
         RCLCPP_DEBUG(this->get_logger(), "Got heartbeat rate: %" PRIu32, heartbeat_rate);
 
         // Create a publisher for the "heartbeat" topic
-        publisher_ = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
+        this->heartbeat_publisher = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
         RCLCPP_DEBUG(this->get_logger(), "Create heartbeat publisher");
 
         // Create a timer that sends a heartbeat message every 500ms
-        timer_ = this->create_wall_timer(std::chrono::milliseconds(heartbeat_rate), std::bind(&CommonNode::timer_callback, this));
+        this->heartbeat_timer = this->create_wall_timer(std::chrono::milliseconds(heartbeat_rate), std::bind(&CommonNode::timer_callback, this));
         RCLCPP_DEBUG(this->get_logger(), "Created heartbeat timer");
     }
 
@@ -54,9 +54,9 @@ private:
      */
     void timer_callback();
 
-    bool active = false;  ///< Indicating if node is currently active and sending commands to interface node
+    bool node_active = false;  ///< Indicating if node is currently active and sending commands to interface node
 
-    rclcpp::TimerBase::SharedPtr timer_;  ///< Timer for sending heartbeat messages
-    rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr publisher_;  ///< Publisher for the "heartbeat" topic
-    interfaces::msg::Heartbeat::_seq_type tick_ = 0;  ///< Tick counting upwards with every heartbeat
+    rclcpp::TimerBase::SharedPtr heartbeat_timer;  ///< Timer for sending heartbeat messages
+    rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr heartbeat_publisher;  ///< Publisher for the "heartbeat" topic
+    interfaces::msg::Heartbeat::_seq_type heartbeat_tick = 0;  ///< Tick counting upwards with every heartbeat
 };
