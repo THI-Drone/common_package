@@ -45,5 +45,4 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;  ///< Timer for sending heartbeat messages
   rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr publisher_;  ///< Publisher for the "heartbeat" topic
   interfaces::msg::Heartbeat::_seq_type tick_ = 0;  ///< Tick counting upwards with every heartbeat
-  char* id;  ///< Unique name of the node
 };
