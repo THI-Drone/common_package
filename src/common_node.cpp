@@ -15,7 +15,7 @@ void CommonNode::timer_callback() {
     message.time_stamp = this->now();
     message.sender_id = this->get_fully_qualified_name();
     message.active = this->node_active;
-    message.seq = this->heartbeat_tick++;
+    message.seq = ++(this->heartbeat_tick);
     this->heartbeat_publisher->publish(message);
     RCLCPP_INFO(this->get_logger(), "Send heartbeat with seq: %d and marked as: %s", message.seq, message.active ? "active" : "inactive");
 }
