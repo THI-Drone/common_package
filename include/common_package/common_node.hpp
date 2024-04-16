@@ -6,6 +6,8 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
+#include "rclcpp/node_options.hpp"
+
 #include "interfaces/msg/heartbeat.hpp"
 
 using namespace std::chrono_literals;
@@ -22,8 +24,9 @@ public:
   /**
    * @brief Constructor for creating a new CommonNode.
    * @param id Unique name of the node.
+   * @param options Optional options for the Node
    */
-  CommonNode(const std::string &id) : Node(id) {
+  CommonNode(const std::string &id, const rclcpp::NodeOptions &options = rclcpp::NodeOptions()) : Node(id, options) {
     // Create a publisher for the "heartbeat" topic
     publisher_ = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
     RCLCPP_DEBUG(this->get_logger(), "Create heartbeat publisher");
