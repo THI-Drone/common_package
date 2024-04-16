@@ -2,10 +2,12 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>common_package</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>Package providing common functionality for other nodes</description>
   <maintainer email="phg6386@thi.de">philipp</maintainer>
   <license>MIT</license>
+  <url>https://github.com/THI-Drone/common_package</url>
+  <author email="job8197@thi.de">Johan</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
