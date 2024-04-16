@@ -1,13 +1,16 @@
 #pragma once
 
+#include <cinttypes>
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
-#include <cinttypes>
 
-#include "rclcpp/rclcpp.hpp"
+
+#include "rclcpp/duration.hpp"
 #include "rclcpp/node_options.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp/qos.hpp"
 
 #include "interfaces/msg/heartbeat.hpp"
 
@@ -25,15 +28,31 @@ public:
      * @param options Optional options for the Node
      */
     CommonNode(const std::string &id, const rclcpp::NodeOptions &options = rclcpp::NodeOptions()) : Node(id, options) {
-        const uint32_t heartbeat_rate = this->declare_parameter("heartbeat_rate", 500);
-        RCLCPP_DEBUG(this->get_logger(), "Got heartbeat rate: %" PRIu32, heartbeat_rate);
+        const auto heartbeat_rate = std::chrono::duration<uint32_t, std::milli>(this->declare_parameter("heartbeat_rate", 500));
+        RCLCPP_DEBUG(this->get_logger(), "Got heartbeat rate: %" PRIu32 "ms", heartbeat_rate.count());
 
         // Create a publisher for the "heartbeat" topic
-        this->heartbeat_publisher = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
+        this->heartbeat_publisher = this->create_publisher<interfaces::msg::Heartbeat>(
+                "heartbeat",
+                rclcpp::QoS(
+                        rclcpp::KeepLast(1),
+                        rmw_qos_profile_t{
+                            rmw_qos_history_policy_t::RMW_QOS_POLICY_HISTORY_KEEP_LAST,
+                            1,
+                            rmw_qos_reliability_policy_t::RMW_QOS_POLICY_RELIABILITY_RELIABLE,
+                            rmw_qos_durability_policy_t::RMW_QOS_POLICY_DURABILITY_VOLATILE,
+                            rclcpp::Duration(heartbeat_rate).to_rmw_time(),
+                            rclcpp::Duration(heartbeat_rate / 2).to_rmw_time(),
+                            rmw_qos_liveliness_policy_t::RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC,
+                            rclcpp::Duration(heartbeat_rate * 2).to_rmw_time(),
+                            false,
+                        }
+                )
+        );
         RCLCPP_DEBUG(this->get_logger(), "Create heartbeat publisher");
 
         // Create a timer that sends a heartbeat message every 500ms
-        this->heartbeat_timer = this->create_wall_timer(std::chrono::milliseconds(heartbeat_rate), std::bind(&CommonNode::timer_callback, this));
+        this->heartbeat_timer = this->create_wall_timer(heartbeat_rate, std::bind(&CommonNode::timer_callback, this));
         RCLCPP_DEBUG(this->get_logger(), "Created heartbeat timer");
     }
 
