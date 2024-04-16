@@ -12,8 +12,8 @@
 void CommonNode::timer_callback() {
     RCLCPP_DEBUG(this->get_logger(), "Heartbeat timer callback called");
     interfaces::msg::Heartbeat message;
-    message.header.stamp = this->now();
-    message.header.frame_id = this->get_fully_qualified_name();
+    message.time_stamp = this->now();
+    message.sender_id = this->get_fully_qualified_name();
     message.active = this->active;
     message.seq = this->tick_++;
     publisher_->publish(message);
