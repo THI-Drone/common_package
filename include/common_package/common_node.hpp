@@ -12,7 +12,7 @@
 
 using namespace std::chrono_literals;
 
-/**
+/*
  * @class CommonNode
  * @brief A class representing a common node.
  *
@@ -21,7 +21,7 @@ using namespace std::chrono_literals;
 class CommonNode : public rclcpp::Node
 {
 public:
-  /**
+  /*
    * @brief Constructor for creating a new CommonNode.
    * @param id Unique name of the node.
    * @param options Optional options for the Node
@@ -37,13 +37,22 @@ public:
   }
 
 protected:
-  bool active = false;  ///< Indicating if node is currently active and sending commands to interface node
+   /*
+    * @brief Setter for active
+    */
+  void activate();
+  /*
+   * @brief Setter for active
+   */
+  void deactivate();
 
 private:
-  /**
+  /*
    * @brief Callback function for the timer.
    */
   void timer_callback();
+
+  bool active = false;  ///< Indicating if node is currently active and sending commands to interface node
 
   rclcpp::TimerBase::SharedPtr timer_;  ///< Timer for sending heartbeat messages
   rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr publisher_;  ///< Publisher for the "heartbeat" topic
