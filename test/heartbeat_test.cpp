@@ -123,6 +123,61 @@ TEST(common_package, heartbeat_multiple){
     ASSERT_EQ(count_1, 5);
 }
 
+TEST(common_package, heartbeat_activate_deactivate){
+    constexpr int64_t heartbeat_period = 50;
+
+    class OpenCommonNode : public common_package::CommonNode {
+    public:
+        OpenCommonNode(const std::string &name, const rclcpp::NodeOptions options = rclcpp::NodeOptions()) : common_package::CommonNode(name, options) {
+
+        }
+
+        inline void activate() {
+            common_package::CommonNode::activate();
+        }
+
+        inline void deactivate() {
+            common_package::CommonNode::deactivate();
+        }
+    };
+
+    rclcpp::executors::MultiThreadedExecutor executor;
+
+    rclcpp::NodeOptions options;
+    options.append_parameter_override("heartbeat_period", heartbeat_period);
+    std::shared_ptr<OpenCommonNode> heartbeat_node = std::make_shared<OpenCommonNode>("heartbeat", options);
+    executor.add_node(heartbeat_node);
+    rclcpp::Node::SharedPtr test_node = std::make_shared<rclcpp::Node>("test");
+    interfaces::msg::Heartbeat last_msg;
+    last_msg.seq = 0;
+    last_msg.time_stamp = test_node->now();
+    last_msg.active = true;
+    rclcpp::Subscription<interfaces::msg::Heartbeat>::SharedPtr heartbeat_sub = test_node->create_subscription<interfaces::msg::Heartbeat>("heartbeat", 1, [&last_msg, test_node, heartbeat_node](interfaces::msg::Heartbeat::ConstSharedPtr msg) {
+        RCLCPP_DEBUG(test_node->get_logger(), "Got message with seq: %" PRIu32, msg->seq);
+        const rclcpp::Duration time_delta = rclcpp::Time(msg->time_stamp) - last_msg.time_stamp;
+        ASSERT_TRUE(time_delta <= rclcpp::Duration(std::chrono::duration<int64_t, std::milli>(heartbeat_period +10))) << "Delta: " << time_delta.seconds() << "s " << time_delta.nanoseconds() << "ns";
+        ASSERT_EQ(last_msg.seq + 1, msg->seq);
+        ASSERT_EQ(msg->sender_id, "/heartbeat");
+        if(msg->active) {
+            ASSERT_FALSE(last_msg.active) << "Got unexpected active message with seq: " << msg->seq;
+            heartbeat_node->deactivate();
+        } else {
+            ASSERT_TRUE(last_msg.active) << "Got unexpected active message with seq: " << msg->seq;
+            heartbeat_node->activate();
+        }
+        last_msg = *msg;
+        ASSERT_EQ(last_msg.seq, msg->seq);
+    });
+    rclcpp::TimerBase::SharedPtr end_timer = test_node->create_wall_timer(std::chrono::milliseconds(500), [&executor, test_node]() {
+        RCLCPP_DEBUG(test_node->get_logger(), "Stopping executor");
+        executor.cancel();
+    });
+    executor.add_node(test_node);
+
+    executor.spin();
+    ASSERT_EQ(last_msg.seq, 10);
+}
+
 int main(int argc, char** argv) {
     rclcpp::init(0, nullptr);
     testing::InitGoogleTest(&argc, argv);
