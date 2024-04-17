@@ -74,6 +74,55 @@ TEST(common_package, heartbeat_blocked){
     ASSERT_EQ(count, 1);
 }
 
+TEST(common_package, heartbeat_multiple){
+    constexpr int64_t heartbeat_period = 50;
+    rclcpp::executors::MultiThreadedExecutor executor;
+
+    rclcpp::NodeOptions node_options_0;
+    node_options_0.append_parameter_override("heartbeat_period", heartbeat_period);
+    std::shared_ptr<common_package::CommonNode> heartbeat_node_0 = std::make_shared<common_package::CommonNode>("heartbeat_0", node_options_0);
+    executor.add_node(heartbeat_node_0);
+
+    rclcpp::NodeOptions node_options_1;
+    node_options_1.append_parameter_override("heartbeat_period", heartbeat_period * 2);
+    std::shared_ptr<common_package::CommonNode> heartbeat_node_1 = std::make_shared<common_package::CommonNode>("heartbeat_1", node_options_1);
+    executor.add_node(heartbeat_node_1);
+
+    rclcpp::Node::SharedPtr test_node = std::make_shared<rclcpp::Node>("test");
+    uint16_t count_0 = 0;
+    rclcpp::Time last_msg_0 = test_node->now();
+    uint16_t count_1 = 0;
+    rclcpp::Time last_msg_1 = test_node->now();
+    rclcpp::CallbackGroup::SharedPtr test_callback_group = test_node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive, true);
+    rclcpp::SubscriptionOptionsWithAllocator<std::allocator<void>> subscription_options;
+    subscription_options.callback_group = test_callback_group;
+    rclcpp::Subscription<interfaces::msg::Heartbeat>::SharedPtr heartbeat_sub = test_node->create_subscription<interfaces::msg::Heartbeat>("heartbeat", 1, [&count_0, &last_msg_0, &count_1, &last_msg_1, test_node](interfaces::msg::Heartbeat::ConstSharedPtr msg) {
+        RCLCPP_DEBUG(test_node->get_logger(), "Got message with seq: %" PRIu32, msg->seq);
+        if(msg->sender_id == "/heartbeat_0") {
+            ASSERT_EQ(count_0 + 1, msg->seq);
+            count_0++;
+            ASSERT_TRUE(rclcpp::Time(msg->time_stamp) - last_msg_0 <= rclcpp::Duration(std::chrono::duration<int64_t, std::milli>(heartbeat_period + 10)));
+            last_msg_0 = msg->time_stamp;
+        } else if(msg->sender_id == "/heartbeat_1") {
+            ASSERT_EQ(count_1 + 1, msg->seq);
+            count_1++;
+            ASSERT_TRUE(rclcpp::Time(msg->time_stamp) - last_msg_1 <= rclcpp::Duration(std::chrono::duration<int64_t, std::milli>(2 * heartbeat_period + 10)));
+            last_msg_1 = msg->time_stamp;
+        } else {
+            FAIL() << "Got unexpected sender id: " << msg->sender_id;
+        }
+    }, subscription_options);
+    rclcpp::TimerBase::SharedPtr end_timer = test_node->create_wall_timer(std::chrono::milliseconds(500), [&executor, test_node]() {
+        RCLCPP_DEBUG(test_node->get_logger(), "Stopping executor");
+        executor.cancel();
+    });
+    executor.add_node(test_node);
+
+    executor.spin();
+    ASSERT_EQ(count_0, 10);
+    ASSERT_EQ(count_1, 5);
+}
+
 int main(int argc, char** argv) {
     rclcpp::init(0, nullptr);
     testing::InitGoogleTest(&argc, argv);
