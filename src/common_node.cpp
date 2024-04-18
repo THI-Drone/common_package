@@ -10,7 +10,7 @@
  * @return void
  */
 void CommonNode::heartbeat_timer_callback() {
-    auto message = interfaces::msg::Heartbeat();
+    interfaces::msg::Heartbeat message;
     message.sender_id = this->get_fully_qualified_name();
     message.active = node_active;
     message.tick = ++heartbeat_tick;
