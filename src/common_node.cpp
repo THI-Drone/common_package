@@ -9,11 +9,12 @@
  * 
  * @return void
  */
-void CommonNode::timer_callback() {
+void CommonNode::heartbeat_timer_callback() {
     auto message = interfaces::msg::Heartbeat();
     message.sender_id = this->get_fully_qualified_name();
     message.active = node_active;
     message.tick = ++heartbeat_tick;
     message.time_stamp = this->now();
     heartbeat_publisher->publish(message);
+    RCLCPP_DEBUG(this->get_logger(), "CommonNode::heartbeat_timer_callback: Published heartbeat message with sender_id: %s, tick: %u, active: %d", this->get_fully_qualified_name(), message.tick, message.active);
 }

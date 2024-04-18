@@ -30,7 +30,7 @@ public:
         heartbeat_publisher = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 1);
 
         // Create a timer that sends a heartbeat message every 500ms
-        heartbeat_timer = this->create_wall_timer(500ms, std::bind(&CommonNode::timer_callback, this));
+        heartbeat_timer = this->create_wall_timer(std::chrono::milliseconds(heartbeat_period_ms), std::bind(&CommonNode::heartbeat_timer_callback, this));
     }
 
     /**
@@ -52,7 +52,7 @@ protected:
     void activate()
     {
         node_active = true;
-        RCLCPP_DEBUG(this->get_logger(), "Activated node");
+        RCLCPP_DEBUG(this->get_logger(), "CommonNode::activate: Activated node");
     }
 
     /**
@@ -63,14 +63,14 @@ protected:
     void deactivate()
     {
         node_active = false;
-        RCLCPP_DEBUG(this->get_logger(), "Deactivated node");
+        RCLCPP_DEBUG(this->get_logger(), "CommonNode::deactivate: Deactivated node");
     }
 
 private:
     /**
      * @brief Callback function for the timer.
      */
-    void timer_callback();
+    void heartbeat_timer_callback();
 
     bool node_active = false;                                                     ///< Indicating if node is currently active and sending commands to interface node
     const uint16_t heartbeat_period_ms = 500;                                     ///< Heartbeat period in ms
