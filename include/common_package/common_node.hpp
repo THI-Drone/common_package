@@ -23,7 +23,9 @@ public:
    * @brief Constructor for creating a new CommonNode.
    * @param id Unique name of the node.
    */
-  CommonNode(std::string id) : Node(id) {
+  CommonNode(std::string id)
+  : Node(id)
+  {
     // Create a publisher for the "heartbeat" topic
     publisher_ = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
 
@@ -43,5 +45,5 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;  ///< Timer for sending heartbeat messages
   rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr publisher_;  ///< Publisher for the "heartbeat" topic
   uint32_t tick_ = 0;  ///< Tick counting upwards with every heartbeat
-  char* id;  ///< Unique name of the node
+  char * id;  ///< Unique name of the node
 };
