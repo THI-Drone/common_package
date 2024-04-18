@@ -11,6 +11,8 @@
 
 #include "common_package/common_node.hpp"
 
+using namespace common_lib;
+
 TEST(common_package, heartbeat_rate)
 {
     constexpr uint16_t heartbeat_period = 500;

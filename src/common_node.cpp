@@ -1,5 +1,6 @@
 #include "common_package/common_node.hpp"
 
+using namespace common_lib;
 
 /**
  * @brief Callback function for the timer.
