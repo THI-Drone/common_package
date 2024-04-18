@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cinttypes>
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -19,29 +20,61 @@ using namespace std::chrono_literals;
 class CommonNode : public rclcpp::Node
 {
 public:
-  /**
-   * @brief Constructor for creating a new CommonNode.
-   * @param id Unique name of the node.
-   */
-  CommonNode(std::string id) : Node(id) {
-    // Create a publisher for the "heartbeat" topic
-    publisher_ = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 10);
+    /**
+     * @brief Constructor for creating a new CommonNode.
+     * @param id Unique name of the node.
+     */
+    CommonNode(std::string id) : Node(id)
+    {
+        // Create a publisher for the "heartbeat" topic
+        heartbeat_publisher = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 1);
 
-    // Create a timer that sends a heartbeat message every 500ms
-    timer_ = this->create_wall_timer(500ms, std::bind(&CommonNode::timer_callback, this));
-  }
+        // Create a timer that sends a heartbeat message every 500ms
+        heartbeat_timer = this->create_wall_timer(500ms, std::bind(&CommonNode::timer_callback, this));
+    }
+
+    /**
+     * @brief Get the active status of the node.
+     *
+     * @return true if the node is active, false otherwise.
+     */
+    bool get_active() const
+    {
+        return node_active;
+    }
 
 protected:
-  bool active = false;  ///< Indicating if node is currently active and sending commands to interface node
+    /**
+     * @brief Activates the node.
+     * 
+     * This function sets the `node_active` flag to true, indicating that the node is active.
+     */
+    void activate()
+    {
+        node_active = true;
+        RCLCPP_DEBUG(this->get_logger(), "Activated node");
+    }
+
+    /**
+     * @brief Deactivates the node.
+     *
+     * This function sets the `node_active` flag to false, indicating that the node is no longer active.
+     */
+    void deactivate()
+    {
+        node_active = false;
+        RCLCPP_DEBUG(this->get_logger(), "Deactivated node");
+    }
 
 private:
-  /**
-   * @brief Callback function for the timer.
-   */
-  void timer_callback();
+    /**
+     * @brief Callback function for the timer.
+     */
+    void timer_callback();
 
-  rclcpp::TimerBase::SharedPtr timer_;  ///< Timer for sending heartbeat messages
-  rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr publisher_;  ///< Publisher for the "heartbeat" topic
-  uint32_t tick_ = 0;  ///< Tick counting upwards with every heartbeat
-  char* id;  ///< Unique name of the node
+    bool node_active = false;                                                     ///< Indicating if node is currently active and sending commands to interface node
+    const uint16_t heartbeat_period_ms = 500;                                     ///< Heartbeat period in ms
+    rclcpp::TimerBase::SharedPtr heartbeat_timer;                                 ///< Timer for sending heartbeat messages
+    rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr heartbeat_publisher; ///< Publisher for the "heartbeat" topic
+    interfaces::msg::Heartbeat::_tick_type heartbeat_tick = 0;                     ///< Tick counting upwards with every heartbeat
 };
