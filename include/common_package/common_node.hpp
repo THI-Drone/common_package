@@ -46,7 +46,7 @@ public:
 protected:
     /**
      * @brief Activates the node.
-     * 
+     *
      * This function sets the `node_active` flag to true, indicating that the node is active.
      */
     void activate()
@@ -73,8 +73,8 @@ private:
     void heartbeat_timer_callback();
 
     bool node_active = false;                                                     ///< Indicating if node is currently active and sending commands to interface node
-    const uint16_t heartbeat_period_ms = 500;                                     ///< Heartbeat period in ms
+    constexpr uint16_t heartbeat_period_ms = 500;                                 ///< Heartbeat period in ms
     rclcpp::TimerBase::SharedPtr heartbeat_timer;                                 ///< Timer for sending heartbeat messages
     rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr heartbeat_publisher; ///< Publisher for the "heartbeat" topic
-    interfaces::msg::Heartbeat::_tick_type heartbeat_tick = 0;                     ///< Tick counting upwards with every heartbeat
+    interfaces::msg::Heartbeat::_tick_type heartbeat_tick = 0;                    ///< Tick counting upwards with every heartbeat
 };
