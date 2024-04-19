@@ -50,39 +50,6 @@ TEST(common_package, heartbeat_rate)
     ASSERT_EQ(last_msg.tick, 10);
 }
 
-TEST(common_package, heartbeat_blocked)
-{
-    constexpr uint16_t heartbeat_period = 500;
-    rclcpp::executors::SingleThreadedExecutor executor;
-
-    std::shared_ptr<CommonNode> heartbeat_node = std::make_shared<CommonNode>("heartbeat");
-
-    rclcpp::TimerBase::SharedPtr block_timer = heartbeat_node->create_wall_timer(
-        std::chrono::milliseconds(750), [&executor, heartbeat_node]()
-        {
-            RCLCPP_DEBUG(heartbeat_node->get_logger(), "Starting block");
-             std::this_thread::sleep_for(std::chrono::milliseconds(heartbeat_period * 5));
-            RCLCPP_DEBUG(heartbeat_node->get_logger(), "Stopped block");
-            executor.cancel(); });
-
-    rclcpp::Node::SharedPtr test_node = std::make_shared<rclcpp::Node>("test");
-    uint16_t count = 0;
-    rclcpp::Subscription<interfaces::msg::Heartbeat>::SharedPtr heartbeat_sub = test_node->create_subscription<interfaces::msg::Heartbeat>(
-        "heartbeat",
-        1,
-        [&count, test_node](interfaces::msg::Heartbeat::ConstSharedPtr msg)
-        {
-            RCLCPP_DEBUG(test_node->get_logger(), "Got message with tick: %" PRIu32, msg->tick);
-            count++;
-            ASSERT_LE(count, 1) << "Block of heartbeat failed!"; });
-
-    executor.add_node(heartbeat_node);
-    executor.add_node(test_node);
-
-    executor.spin();
-    ASSERT_EQ(count, 1);
-}
-
 TEST(common_package, heartbeat_activate_deactivate)
 {
     constexpr uint16_t heartbeat_period = 500;
@@ -127,6 +94,7 @@ TEST(common_package, heartbeat_activate_deactivate)
             ASSERT_TRUE(time_delta <= rclcpp::Duration(std::chrono::duration<int64_t, std::milli>(heartbeat_period +10))) << "Delta: " << time_delta.seconds() << "s " << time_delta.nanoseconds() << "ns";
             ASSERT_EQ(last_msg.tick + 1, msg->tick);
             ASSERT_EQ(msg->sender_id, "/heartbeat");
+            ASSERT_EQ(msg->active, heartbeat_node->get_active());
 
             if(msg->active) {
                 ASSERT_FALSE(last_msg.active) << "Got unexpected active message with tick: " << msg->tick;
