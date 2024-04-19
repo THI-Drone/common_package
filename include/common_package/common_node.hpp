@@ -26,7 +26,7 @@ namespace common_lib
          * @brief Constructor for creating a new CommonNode.
          * @param id Unique name of the node.
          */
-        CommonNode(std::string id) : Node(id)
+        CommonNode(const std::string &id) : Node(id)
         {
             // Create a publisher for the "heartbeat" topic
             heartbeat_publisher = this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 1);
