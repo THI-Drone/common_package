@@ -11,13 +11,14 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(nlohmann_json REQUIRED)  # JSON library
 find_package(rclcpp REQUIRED)
 find_package(interfaces REQUIRED)
 
 include_directories(include)
 
 add_library(common_lib SHARED src/common_node.cpp)
-ament_target_dependencies(common_lib rclcpp interfaces)
+ament_target_dependencies(common_lib rclcpp interfaces nlohmann_json)
 ament_export_libraries(common_lib)
 ament_export_include_directories(include)
 
@@ -44,13 +45,13 @@ if(BUILD_TESTING)
   # ament_lint_auto_find_test_dependencies()
   
   find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(${PROJECT_NAME}_test test/heartbeat_test.cpp)
+  ament_add_gtest(${PROJECT_NAME}_test test/common_node_test.cpp)
   target_include_directories(${PROJECT_NAME}_test PUBLIC
           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
           $<INSTALL_INTERFACE:include>
   )
   ament_target_dependencies(${PROJECT_NAME}_test
-          rclcpp interfaces
+          rclcpp interfaces nlohmann_json
   )
   target_link_libraries(${PROJECT_NAME}_test common_lib)
 endif()
