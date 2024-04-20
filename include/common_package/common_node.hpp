@@ -5,9 +5,12 @@
 #include <functional>
 #include <memory>
 #include <string>
-
+#include <nlohmann/json.hpp>
 #include "rclcpp/rclcpp.hpp"
+
+// Message includes
 #include "interfaces/msg/heartbeat.hpp"
+#include "interfaces/msg/job_finished.hpp"
 
 using namespace std::chrono_literals;
 
@@ -33,6 +36,9 @@ namespace common_lib
 
             // Create a timer that sends a heartbeat message every 500ms
             heartbeat_timer = this->create_wall_timer(std::chrono::milliseconds(heartbeat_period_ms), std::bind(&CommonNode::heartbeat_timer_callback, this));
+
+            // Create a publisher for the "job_finished" topic
+            job_finished_publisher = this->create_publisher<interfaces::msg::JobFinished>("job_finished", 10);
         }
 
         /**
@@ -68,6 +74,36 @@ namespace common_lib
             RCLCPP_DEBUG(this->get_logger(), "CommonNode::deactivate: Deactivated node");
         }
 
+        /**
+         * @brief Handles the completion of a job.
+         *
+         * This function sends a job_finished message with the given error code and payload.
+         * Additionally, deactivates the node.
+         *
+         * @param error_code The error code associated with the job completion (EXIT_SUCCESS == 0 if no error).
+         * @param payload The payload data associated with the job completion.
+         */
+        void job_finished(const uint8_t error_code, const nlohmann::json payload);
+
+        /**
+         * @brief Handles the completion of a job with the given error message. Can be used if your job fails and you just want to return an error message.
+         *
+         * This function formats the error message to JSON and sends a job_finished message with the error message.
+         * Additionally, deactivates the node.
+         * This function should only be used if your job failed.
+         *
+         * @param error_message The error message associated with the job completion.
+         */
+        void job_finished(const std::string error_message);
+
+        /**
+         * @brief Sends a job_finished message with error code 0 and no error message.
+         * 
+         * This function should be executed only if your job was completed successfully.
+         * Additionally, deactivates the node.
+         */
+        void job_finished();
+
     private:
         /**
          * @brief Callback function for the timer.
@@ -79,5 +115,7 @@ namespace common_lib
         rclcpp::TimerBase::SharedPtr heartbeat_timer;                                 ///< Timer for sending heartbeat messages
         rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr heartbeat_publisher; ///< Publisher for the "heartbeat" topic
         interfaces::msg::Heartbeat::_tick_type heartbeat_tick = 0;                    ///< Tick counting upwards with every heartbeat
+
+        rclcpp::Publisher<interfaces::msg::JobFinished>::SharedPtr job_finished_publisher; ///< Publisher for the "job_finished" topic
     };
 }
