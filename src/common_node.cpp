@@ -91,8 +91,8 @@ void CommonNode::job_finished()
     interfaces::msg::JobFinished msg;
 
     msg.sender_id = this->get_fully_qualified_name();
-    msg.error_code = EXIT_SUCCESS; // set error code to 0 to indicate success
-    msg.payload = "{}";            // payload is empty
+    msg.error_code = EXIT_SUCCESS; // set error code to EXIT_SUCCESS to indicate success
+    msg.payload = "{}";            // payload is empty JSON
 
     job_finished_publisher->publish(msg);
 
