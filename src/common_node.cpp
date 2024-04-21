@@ -39,6 +39,7 @@ void CommonNode::job_finished(const uint8_t error_code, const nlohmann::json &pa
     msg.payload = payload.dump();
 
     job_finished_publisher->publish(msg);
+    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message with custom error_code and payload");
 
     // Deactivate node
     deactivate();
@@ -75,6 +76,7 @@ void CommonNode::job_finished(const std::string &error_message)
     }
 
     job_finished_publisher->publish(msg);
+    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message with given error message and EXIT_FAILURE error code");
 
     // Deactivate node
     deactivate();
@@ -95,6 +97,7 @@ void CommonNode::job_finished()
     msg.payload = "{}";            // payload is empty JSON
 
     job_finished_publisher->publish(msg);
+    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message indicating success");
 
     // Deactivate node
     deactivate();
