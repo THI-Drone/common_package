@@ -36,10 +36,19 @@ void CommonNode::job_finished(const uint8_t error_code, const nlohmann::json &pa
 
     msg.sender_id = this->get_fully_qualified_name();
     msg.error_code = error_code;
-    msg.payload = payload.dump();
+
+    try
+    {
+        msg.payload = payload.dump();
+    }
+    catch (const nlohmann::json::parse_error &e)
+    {
+        RCLCPP_FATAL(this->get_logger(), "CommonNode::job_finished: Payload is not a valid JSON. Stopping node.");
+        exit(EXIT_FAILURE);
+    }
 
     job_finished_publisher->publish(msg);
-    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message with custom error_code and payload");
+    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message with custom error_code: %" PRIu8 " and payload", error_code);
 
     // Deactivate node
     deactivate();
@@ -76,7 +85,7 @@ void CommonNode::job_finished(const std::string &error_message)
     }
 
     job_finished_publisher->publish(msg);
-    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message with given error message and EXIT_FAILURE error code");
+    RCLCPP_DEBUG(this->get_logger(), "CommonNode::job_finished: Sent job_finished message with error message: '%s' and EXIT_FAILURE error code", error_message.c_str());
 
     // Deactivate node
     deactivate();
