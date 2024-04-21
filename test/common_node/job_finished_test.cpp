@@ -52,7 +52,7 @@ TEST(common_package, job_finished_successfull)
             RCLCPP_DEBUG(test_node->get_logger(), "Got job_finished message");
             ASSERT_EQ(msg->sender_id, "/common_node");
             ASSERT_EQ(msg->error_code, EXIT_SUCCESS);
-            ASSERT_EQ(msg->payload.length(), 0);
+            ASSERT_EQ(nlohmann::json::parse(msg->payload), nlohmann::json::parse("{}"));
             ASSERT_FALSE(common_node->get_active());
             executor.cancel();
         });
