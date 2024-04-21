@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
-
-#include "rclcpp/node.hpp"
+#include "rclcpp/utilities.hpp"
 
 static constexpr size_t TEST_DOMAIN_ID = 2;
 
