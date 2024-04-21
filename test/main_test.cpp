@@ -2,7 +2,7 @@
 
 #include "rclcpp/node.hpp"
 
-#define TEST_DOMAIN_ID 2
+static constexpr size_t TEST_DOMAIN_ID = 2;
 
 int main(int argc, char **argv)
 {
