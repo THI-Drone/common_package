@@ -63,7 +63,16 @@ void CommonNode::job_finished(const std::string &error_message)
 
     msg.sender_id = this->get_fully_qualified_name();
     msg.error_code = EXIT_FAILURE;
-    msg.payload = payload.dump();
+
+    try
+    {
+        msg.payload = payload.dump();
+    }
+    catch (const nlohmann::json::parse_error &e)
+    {
+        RCLCPP_FATAL(this->get_logger(), "CommonNode::job_finished: Payload is not a valid JSON. Stopping node.");
+        exit(EXIT_FAILURE);
+    }
 
     job_finished_publisher->publish(msg);
 
@@ -83,7 +92,7 @@ void CommonNode::job_finished()
 
     msg.sender_id = this->get_fully_qualified_name();
     msg.error_code = EXIT_SUCCESS; // set error code to 0 to indicate success
-    msg.payload = "{}";              // payload is empty
+    msg.payload = "{}";            // payload is empty
 
     job_finished_publisher->publish(msg);
 
