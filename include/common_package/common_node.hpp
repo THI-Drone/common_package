@@ -83,7 +83,7 @@ namespace common_lib
          * @param error_code The error code associated with the job completion (EXIT_SUCCESS == 0 if no error).
          * @param payload The payload data associated with the job completion.
          */
-        void job_finished(const uint8_t error_code, const nlohmann::json payload);
+        void job_finished(const uint8_t error_code, const nlohmann::json &payload);
 
         /**
          * @brief Handles the completion of a job with the given error message. Can be used if your job fails and you just want to return an error message.
@@ -94,7 +94,7 @@ namespace common_lib
          *
          * @param error_message The error message associated with the job completion.
          */
-        void job_finished(const std::string error_message);
+        void job_finished(const std::string &error_message);
 
         /**
          * @brief Sends a job_finished message with error code 0 and no error message.

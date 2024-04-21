@@ -30,7 +30,7 @@ void CommonNode::heartbeat_timer_callback()
  * @param error_code The error code associated with the job completion (EXIT_SUCCESS == 0 if no error).
  * @param payload The payload data associated with the job completion.
  */
-void CommonNode::job_finished(const uint8_t error_code, const nlohmann::json payload)
+void CommonNode::job_finished(const uint8_t error_code, const nlohmann::json &payload)
 {
     interfaces::msg::JobFinished msg;
 
@@ -53,7 +53,7 @@ void CommonNode::job_finished(const uint8_t error_code, const nlohmann::json pay
  *
  * @param error_message The error message associated with the job completion.
  */
-void CommonNode::job_finished(const std::string error_message)
+void CommonNode::job_finished(const std::string &error_message)
 {
     // format error_message to JSON
     nlohmann::json payload;
