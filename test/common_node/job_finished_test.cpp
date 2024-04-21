@@ -21,6 +21,11 @@ public:
     {
     }
 
+    inline void activate()
+    {
+        CommonNode::activate();
+    }
+
     inline void job_finished(const uint8_t error_code, const nlohmann::json payload)
     {
         CommonNode::job_finished(error_code, payload);
@@ -42,6 +47,9 @@ TEST(common_package, job_finished_successfull)
     rclcpp::executors::SingleThreadedExecutor executor;
 
     std::shared_ptr<JobFinishedCommonNode> common_node = std::make_shared<JobFinishedCommonNode>("common_node");
+    common_node->activate();
+    ASSERT_TRUE(common_node->get_active());
+
     rclcpp::Node::SharedPtr test_node = std::make_shared<rclcpp::Node>("test");
 
     rclcpp::Subscription<interfaces::msg::JobFinished>::SharedPtr job_finished_sub = test_node->create_subscription<interfaces::msg::JobFinished>(
@@ -74,6 +82,9 @@ TEST(common_package, job_finished_error_message)
     rclcpp::executors::SingleThreadedExecutor executor;
 
     std::shared_ptr<JobFinishedCommonNode> common_node = std::make_shared<JobFinishedCommonNode>("common_node");
+    common_node->activate();
+    ASSERT_TRUE(common_node->get_active());
+
     rclcpp::Node::SharedPtr test_node = std::make_shared<rclcpp::Node>("test");
 
     rclcpp::Subscription<interfaces::msg::JobFinished>::SharedPtr job_finished_sub = test_node->create_subscription<interfaces::msg::JobFinished>(
@@ -110,6 +121,9 @@ TEST(common_package, job_finished_custom_payload)
     rclcpp::executors::SingleThreadedExecutor executor;
 
     std::shared_ptr<JobFinishedCommonNode> common_node = std::make_shared<JobFinishedCommonNode>("common_node");
+    common_node->activate();
+    ASSERT_TRUE(common_node->get_active());
+
     rclcpp::Node::SharedPtr test_node = std::make_shared<rclcpp::Node>("test");
 
     rclcpp::Subscription<interfaces::msg::JobFinished>::SharedPtr job_finished_sub = test_node->create_subscription<interfaces::msg::JobFinished>(
