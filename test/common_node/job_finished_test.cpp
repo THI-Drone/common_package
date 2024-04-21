@@ -47,6 +47,7 @@ TEST(common_package, job_finished_successfull)
     rclcpp::executors::SingleThreadedExecutor executor;
 
     std::shared_ptr<JobFinishedCommonNode> common_node = std::make_shared<JobFinishedCommonNode>("common_node");
+    ASSERT_FALSE(common_node->get_active());
     common_node->activate();
     ASSERT_TRUE(common_node->get_active());
 
@@ -82,6 +83,7 @@ TEST(common_package, job_finished_error_message)
     rclcpp::executors::SingleThreadedExecutor executor;
 
     std::shared_ptr<JobFinishedCommonNode> common_node = std::make_shared<JobFinishedCommonNode>("common_node");
+    ASSERT_FALSE(common_node->get_active());
     common_node->activate();
     ASSERT_TRUE(common_node->get_active());
 
@@ -121,6 +123,7 @@ TEST(common_package, job_finished_custom_payload)
     rclcpp::executors::SingleThreadedExecutor executor;
 
     std::shared_ptr<JobFinishedCommonNode> common_node = std::make_shared<JobFinishedCommonNode>("common_node");
+    ASSERT_FALSE(common_node->get_active());
     common_node->activate();
     ASSERT_TRUE(common_node->get_active());
 
