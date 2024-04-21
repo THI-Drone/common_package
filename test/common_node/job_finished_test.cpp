@@ -136,7 +136,7 @@ TEST(common_package, job_finished_custom_payload)
         {
             RCLCPP_DEBUG(test_node->get_logger(), "Got job_finished message");
             ASSERT_EQ(msg->sender_id, "/common_node");
-            ASSERT_EQ(msg->error_code, EXIT_FAILURE);
+            ASSERT_EQ(msg->error_code, 5);
 
             nlohmann::json payload_check;
             payload_check["coord"] = "These are my coordinates";
@@ -154,7 +154,7 @@ TEST(common_package, job_finished_custom_payload)
             nlohmann::json payload;
             payload["coord"] = "These are my coordinates";
             payload["height_cm"] = 500;
-            common_node->job_finished(EXIT_FAILURE, payload); });
+            common_node->job_finished(5, payload); });
 
     executor.add_node(common_node);
     executor.add_node(test_node);
