@@ -26,12 +26,12 @@ public:
         CommonNode::activate();
     }
 
-    inline void job_finished(const uint8_t error_code, const nlohmann::json payload)
+    inline void job_finished(const uint8_t error_code, const nlohmann::json &payload)
     {
         CommonNode::job_finished(error_code, payload);
     }
 
-    inline void job_finished(const std::string error_message)
+    inline void job_finished(const std::string &error_message)
     {
         CommonNode::job_finished(error_message);
     }
