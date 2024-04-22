@@ -17,7 +17,9 @@ find_package(interfaces REQUIRED)
 
 include_directories(include)
 
-add_library(common_lib SHARED src/common_node.cpp)
+add_library(common_lib SHARED
+  src/common_node.cpp
+  src/commands.cpp)
 ament_target_dependencies(common_lib rclcpp interfaces nlohmann_json)
 ament_export_libraries(common_lib)
 ament_export_include_directories(include)

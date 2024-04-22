@@ -98,7 +98,7 @@ namespace common_lib
 
         /**
          * @brief Sends a job_finished message with error code 0 and no error message.
-         * 
+         *
          * This function should be executed only if your job was completed successfully.
          * Additionally, deactivates the node.
          */
