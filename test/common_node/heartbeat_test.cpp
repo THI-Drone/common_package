@@ -7,9 +7,9 @@
 #include "rclcpp/node.hpp"
 #include "rclcpp/executors.hpp"
 
-#include "interfaces/msg/heartbeat.hpp"
-
 #include "common_package/common_node.hpp"
+
+#include "interfaces/msg/heartbeat.hpp"
 
 using namespace common_lib;
 
@@ -113,18 +113,9 @@ TEST(common_package, heartbeat_activate_deactivate)
         {
             RCLCPP_DEBUG(test_node->get_logger(), "Stopping executor");
             executor.cancel(); });
-    
+
     executor.add_node(test_node);
 
     executor.spin();
     ASSERT_EQ(last_msg.tick, 10);
-}
-
-int main(int argc, char **argv)
-{
-    rclcpp::init(0, nullptr);
-    testing::InitGoogleTest(&argc, argv);
-    const int ret = RUN_ALL_TESTS();
-    rclcpp::shutdown();
-    return ret;
 }
