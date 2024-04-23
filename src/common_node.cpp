@@ -28,7 +28,7 @@ void CommonNode::heartbeat_timer_callback()
  * Additionally, deactivates the node.
  *
  * @param error_code The error code associated with the job completion (EXIT_SUCCESS == 0 if no error).
- * @param payload The payload data associated with the job completion.
+ * @param payload The payload data associated with the job completion. Set the "error_msg" key to your error message string if you want to have it appear on the mission control output log.
  */
 void CommonNode::job_finished(const uint8_t error_code, const nlohmann::json &payload)
 {
