@@ -11,11 +11,10 @@
 namespace common_lib
 {
     // Global Defines
-    // TODO adjust with real values
-    const uint16_t MAX_FLIGHT_HEIGHT_CM = 120 /* [m] */ * 100; /// Maximum allowed flight height in cm
-    const uint16_t MIN_CRUISE_HEIGHT_CM = 5 /* [m] */ * 100;   /// Minimum required cruise height in cm
-    const uint16_t MAX_HORIZONTAL_SPEED_MPS = 8 /* [m/s] */;   /// Maximum allowed horizontal speed in m/s
-    const uint16_t MAX_VERTICAL_SPEED_MPS = 3 /* [m/s] */;     /// Maximum allowed vertical speed in m/s
+    constexpr uint16_t MAX_FLIGHT_HEIGHT_CM = 120 /* [m] */ * 100; /// Maximum allowed flight height in cm
+    constexpr uint16_t MIN_CRUISE_HEIGHT_CM = 5 /* [m] */ * 100;   /// Minimum required cruise height in cm
+    constexpr float MAX_HORIZONTAL_SPEED_MPS = 12.0 /* [m/s] */;     /// Maximum allowed horizontal speed in m/s
+    constexpr float MAX_VERTICAL_SPEED_MPS = 3.0 /* [m/s] */;        /// Maximum allowed vertical speed in m/s
 
     /**
      * @brief Enumeration representing the data types.
@@ -35,8 +34,8 @@ namespace common_lib
     {
         bool required;                              /// If true, the value needs to be provided
         std::unordered_set<data_type_t> data_types; // Unsorted set of accepted data types for the specific key
-        std::optional<int64_t> min_val;             // Min value the value should have (only works with numbers)
-        std::optional<int64_t> max_val;             // Max value the value should have (only works with numbers)
+        std::optional<float> min_val;               // Min value the value should have (only works with numbers)
+        std::optional<float> max_val;               // Max value the value should have (only works with numbers)
 
         /**
          * Converts a data_type_t value to its corresponding string representation.
@@ -62,8 +61,45 @@ namespace common_lib
             case number_unsigned:
                 return "uint";
             default:
-                throw std::runtime_error("CommonNode::parse_check_json: Unknown data_type provided: " + data_type);
+                throw std::runtime_error("JsonKeyDefinition::data_type_to_string: Unknown data_type provided: " + data_type);
             }
+        }
+
+        /**
+         * Checks if the given JSON iterator is within the specified bounds.
+         * The bounds are defined by the minimum and maximum values allowed for the supported data types.
+         * Only specified bounds are checked. If no bounds are specified, all values will be accepted.
+         * Every data type that is not of any `number*` data type will always return true.
+         *
+         * @param json_iter The JSON iterator to check.
+         * @return True if the JSON iterator is within the bounds or the data type is not supported, false otherwise.
+         */
+        bool check_bounds(const nlohmann::detail::iter_impl<const nlohmann::json> json_iter) const
+        {
+            for (const auto &data_type : data_types)
+            {
+                switch (data_type)
+                {
+                case number:
+                case number_float:
+                case number_integer:
+                case number_unsigned:
+                    // Check is only supported for the above data types
+                    if (min_val.has_value() && *json_iter < min_val)
+                        return false;
+
+                    if (max_val.has_value() && *json_iter > max_val)
+                        return false;
+
+                    return true;
+                default:
+                    // Every other data type will default to true
+                    break;
+                }
+            }
+
+            // Every other data type will default to true
+            return true;
         }
 
         /**
@@ -82,7 +118,7 @@ namespace common_lib
          * @param min_val An optional minimum value for the key (default: std::nullopt).
          * @param max_val An optional maximum value for the key (default: std::nullopt).
          */
-        JsonKeyDefinition(const bool required, const std::unordered_set<data_type_t> &data_types, std::optional<const int64_t> min_val = std::nullopt, std::optional<const int64_t> max_val = std::nullopt)
+        JsonKeyDefinition(const bool required, const std::unordered_set<data_type_t> &data_types, std::optional<const float> min_val = std::nullopt, std::optional<const float> max_val = std::nullopt)
         {
             this->required = required;
             this->data_types = data_types;
@@ -101,7 +137,7 @@ namespace common_lib
          * @param min_val An optional minimum value for the key (default: std::nullopt).
          * @param max_val An optional maximum value for the key (default: std::nullopt).
          */
-        JsonKeyDefinition(const bool required, const data_type_t data_type, std::optional<const int64_t> min_val = std::nullopt, std::optional<const int64_t> max_val = std::nullopt)
+        JsonKeyDefinition(const bool required, const data_type_t data_type, std::optional<const float> min_val = std::nullopt, std::optional<const float> max_val = std::nullopt)
         {
             this->required = required;
             this->data_types.insert(data_type);
@@ -135,6 +171,24 @@ namespace common_lib
         static nlohmann::json parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> definition);
 
         /**
+         * @brief Checks a JSON object against a given definition
+         *
+         * Only use this version if you already have a json object.
+         * If you only have a string, use the other overload instead to do a proper parsing.
+         *
+         * - Checks that no undefined keys are in the JSON
+         * - Checks that all required keys exist
+         * - Checks that all values have the correct type
+         *
+         * @note The function can only be used on shallow JSONs. Arrays or encapsulations are not supported and will result in an exception!
+         *
+         * @param json_obj Json object that should be checked
+         * @param definition Definition of what keys shall be included and what type they can have
+         * @throws std::runtime_error with an error message why the check failed
+         */
+        static nlohmann::json parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> definition);
+
+        /**
          * Returns a map containing the definition of waypoint command keys.
          *
          * The keys in the map are of type std::string, representing the names of the command keys.
@@ -151,8 +205,8 @@ namespace common_lib
             definition["post_wait_time_ms"] = JsonKeyDefinition(false, number_unsigned, 0, 1 * 60 * 1000);
             definition["cruise_height_cm"] = JsonKeyDefinition(true, number_unsigned, MIN_CRUISE_HEIGHT_CM, MAX_FLIGHT_HEIGHT_CM);
             definition["target_height_cm"] = JsonKeyDefinition(true, number_unsigned, 0, MAX_FLIGHT_HEIGHT_CM);
-            definition["horizontal_speed_mps"] = JsonKeyDefinition(true, number_float, 0, MAX_HORIZONTAL_SPEED_MPS);
-            definition["vertical_speed_mps"] = JsonKeyDefinition(true, number_float, 0, MAX_VERTICAL_SPEED_MPS);
+            definition["horizontal_speed_mps"] = JsonKeyDefinition(true, number, 0.0, MAX_HORIZONTAL_SPEED_MPS);
+            definition["vertical_speed_mps"] = JsonKeyDefinition(true, number, 0.0, MAX_VERTICAL_SPEED_MPS);
 
             return definition;
         }
