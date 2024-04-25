@@ -64,6 +64,8 @@ struct JsonKeyDefinition {
                 return "int";
             case number_unsigned:
                 return "uint";
+            case string:
+                return "string";
             case array:
                 return "array";
             case object:
@@ -142,6 +144,9 @@ struct JsonKeyDefinition {
                     break;
                 case number_unsigned:
                     if (json_iter->is_number_unsigned()) type_check = true;
+                    break;
+                case string:
+                    if (json_iter->is_string()) type_check = true;
                     break;
                 case array:
                     if (json_iter->is_array()) type_check = true;
