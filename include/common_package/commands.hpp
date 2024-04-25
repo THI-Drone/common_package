@@ -234,8 +234,9 @@ class CommandDefinitions {
      * - Checks that all required keys exist
      * - Checks that all values have the correct type
      *
-     * @note The function can only be used on shallow JSONs. Arrays or
-     * encapsulations are not supported and will result in an exception!
+     * @note The function can only be fully used on shallow JSONs. Arrays or
+     * encapsulations contents' will not be checked! Call this function several
+     * times with the different parts to get that behavior.
      *
      * @param json_str String formatted json that should be parsed and checked
      * @param definition Definition of what keys shall be included and what type
@@ -257,8 +258,9 @@ class CommandDefinitions {
      * - Checks that all required keys exist
      * - Checks that all values have the correct type
      *
-     * @note The function can only be used on shallow JSONs. Arrays or
-     * encapsulations are not supported and will result in an exception!
+     * @note The function can only be fully used on shallow JSONs. Arrays or
+     * encapsulations contents' will not be checked! Call this function several
+     * times with the different parts to get that behavior.
      *
      * @param json_obj Json object that should be checked
      * @param definition Definition of what keys shall be included and what type
