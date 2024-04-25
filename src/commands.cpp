@@ -15,7 +15,7 @@ using namespace common_lib;
  * @param definition Definition of what keys shall be included and what type they can have
  * @throws std::runtime_error with an error message why the check failed
  */
-nlohmann::json CommandDefinitions::parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> &definition)
+nlohmann::json CommandDefinitions::parse_check_json(const std::string &json_str, const std::map<const std::string, const JsonKeyDefinition> &definition)
 {
     nlohmann::json candidate; // The candidate that will be checked
 
@@ -48,15 +48,34 @@ nlohmann::json CommandDefinitions::parse_check_json(const std::string &json_str,
  * @param definition Definition of what keys shall be included and what type they can have
  * @throws std::runtime_error with an error message why the check failed
  */
-nlohmann::json CommandDefinitions::parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> &definition)
+nlohmann::json CommandDefinitions::parse_check_json(const nlohmann::json &json_obj, const std::map<const std::string, const JsonKeyDefinition> &definition)
 {
     // Check that all keys are allowed
-    for (const auto &[key, val] : json_obj.items())
     {
-        const auto search = definition.find(key);
+        bool unknown_key_found = false; // If true, unknown keys were found and an exception will be thrown
+        std::string unknown_keys = "";  // String with all unknown keys that were found
 
-        if (search == definition.end())
-            throw std::runtime_error("CommandDefinitions::parse_check_json: Unknown key found: " + key);
+        for (const auto &[key, val] : json_obj.items())
+        {
+            // Try to find key in definition
+            const auto search = definition.find(key);
+
+            // Check if key is unknown
+            if (search == definition.end())
+            {
+                if (unknown_key_found)
+                    unknown_keys += ", ";
+
+                unknown_key_found = true;
+                unknown_keys += key;
+            }
+        }
+
+        // Check if at least one unknown key was found
+        if (unknown_key_found)
+        {
+            throw std::runtime_error("CommandDefinitions::parse_check_json: Unknown key(s) found: " + unknown_keys);
+        }
     }
 
     // Check keys and value types

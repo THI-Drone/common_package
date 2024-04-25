@@ -13,8 +13,8 @@ namespace common_lib
     // Global Defines
     constexpr uint16_t MAX_FLIGHT_HEIGHT_CM = 120 /* [m] */ * 100; /// Maximum allowed flight height in cm
     constexpr uint16_t MIN_CRUISE_HEIGHT_CM = 5 /* [m] */ * 100;   /// Minimum required cruise height in cm
-    constexpr float MAX_HORIZONTAL_SPEED_MPS = 12.0 /* [m/s] */;     /// Maximum allowed horizontal speed in m/s
-    constexpr float MAX_VERTICAL_SPEED_MPS = 3.0 /* [m/s] */;        /// Maximum allowed vertical speed in m/s
+    constexpr float MAX_HORIZONTAL_SPEED_MPS = 12.0 /* [m/s] */;   /// Maximum allowed horizontal speed in m/s
+    constexpr float MAX_VERTICAL_SPEED_MPS = 3.0 /* [m/s] */;      /// Maximum allowed vertical speed in m/s
 
     /**
      * @brief Enumeration representing the data types.
@@ -168,7 +168,7 @@ namespace common_lib
          * @param definition Definition of what keys shall be included and what type they can have
          * @throws std::runtime_error with an error message why the check failed
          */
-        static nlohmann::json parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> &definition);
+        static nlohmann::json parse_check_json(const std::string &json_str, const std::map<const std::string, const JsonKeyDefinition> &definition);
 
         /**
          * @brief Checks a JSON object against a given definition
@@ -186,7 +186,7 @@ namespace common_lib
          * @param definition Definition of what keys shall be included and what type they can have
          * @throws std::runtime_error with an error message why the check failed
          */
-        static nlohmann::json parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> &definition);
+        static nlohmann::json parse_check_json(const nlohmann::json &json_obj, const std::map<const std::string, const JsonKeyDefinition> &definition);
 
         /**
          * Returns a map containing the definition of waypoint command keys.
@@ -196,18 +196,18 @@ namespace common_lib
          *
          * @return A map containing the definition of waypoint command keys.
          */
-        static std::map<std::string, JsonKeyDefinition> get_waypoint_command_definition()
+        static const std::map<const std::string, const JsonKeyDefinition> get_waypoint_command_definition()
         {
-            std::map<std::string, JsonKeyDefinition> definition;
-            definition["target_coordinate_lat"] = JsonKeyDefinition(true, string);
-            definition["target_coordinate_lon"] = JsonKeyDefinition(true, string);
-            definition["pre_wait_time_ms"] = JsonKeyDefinition(false, number_unsigned, 0, 1 * 60 * 1000);
-            definition["post_wait_time_ms"] = JsonKeyDefinition(false, number_unsigned, 0, 1 * 60 * 1000);
-            definition["cruise_height_cm"] = JsonKeyDefinition(true, number_unsigned, MIN_CRUISE_HEIGHT_CM, MAX_FLIGHT_HEIGHT_CM);
-            definition["target_height_cm"] = JsonKeyDefinition(true, number_unsigned, 0, MAX_FLIGHT_HEIGHT_CM);
-            definition["horizontal_speed_mps"] = JsonKeyDefinition(true, number, 0.0, MAX_HORIZONTAL_SPEED_MPS);
-            definition["vertical_speed_mps"] = JsonKeyDefinition(true, number, 0.0, MAX_VERTICAL_SPEED_MPS);
-
+            const std::map<const std::string, const JsonKeyDefinition> definition{
+                {"target_coordinate_lat", {true, string}},
+                {"target_coordinate_lon", {true, string}},
+                {"pre_wait_time_ms", {false, number_unsigned, 0, 1 * 60 * 1000}},
+                {"post_wait_time_ms", {false, number_unsigned, 0, 1 * 60 * 1000}},
+                {"cruise_height_cm", {true, number_unsigned, MIN_CRUISE_HEIGHT_CM, MAX_FLIGHT_HEIGHT_CM}},
+                {"target_height_cm", {true, number_unsigned, 0, MAX_FLIGHT_HEIGHT_CM}},
+                {"horizontal_speed_mps", {true, number, 0.0, MAX_HORIZONTAL_SPEED_MPS}},
+                {"vertical_speed_mps", {true, number, 0.0, MAX_VERTICAL_SPEED_MPS}}};
+            
             return definition;
         }
     };
