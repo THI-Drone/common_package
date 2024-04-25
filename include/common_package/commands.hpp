@@ -116,7 +116,8 @@ struct JsonKeyDefinition {
      * Checks if the given JSON iterator matches any of the allowed data types.
      *
      * @param json_iter The JSON iterator to be checked.
-     * @return True if the JSON iterator matches any of the allowed data types, false otherwise.
+     * @return True if the JSON iterator matches any of the allowed data types,
+     * false otherwise.
      */
     bool type_check(const nlohmann::json::const_iterator json_iter) const {
         bool type_check = false;
