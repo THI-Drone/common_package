@@ -109,7 +109,7 @@ struct JsonKeyDefinition {
     /**
      * @brief Default constructor for JsonKeyDefinition.
      */
-    JsonKeyDefinition(){};
+    JsonKeyDefinition() = default;
 
     /**
      * @brief Constructs a JsonKeyDefinition object.
