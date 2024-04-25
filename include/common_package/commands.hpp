@@ -288,8 +288,8 @@ class CommandDefinitions {
     static const std::map<const std::string, const JsonKeyDefinition>
     get_waypoint_command_definition() {
         const std::map<const std::string, const JsonKeyDefinition> definition{
-            {"target_coordinate_lat", {true, string}},
-            {"target_coordinate_lon", {true, string}},
+            {"target_coordinate_lat", {true, number_float}},
+            {"target_coordinate_lon", {true, number_float}},
             {"pre_wait_time_ms", {false, number_unsigned, 0, 1 * 60 * 1000}},
             {"post_wait_time_ms", {false, number_unsigned, 0, 1 * 60 * 1000}},
             {"cruise_height_cm",
@@ -303,6 +303,22 @@ class CommandDefinitions {
              {true, number, 0.0, MAX_VERTICAL_SPEED_MPS}}};
 
         return definition;
+    }
+
+    /**
+     * Retrieves the definition for a given command type.
+     *
+     * @param type The type of the command.
+     * @return The definition of the command as a map of string keys to JsonKeyDefinition values.
+     * @throws std::runtime_error if the type is unknown.
+     */
+    static const std::map<const std::string, const JsonKeyDefinition>
+    get_definition(const std::string &type) {
+        if (type == "waypoint")
+            return get_waypoint_command_definition();
+        else
+            throw std::runtime_error(
+                "CommandDefinitions::get_definition: Unknown type: " + type);
     }
 };
 }  // namespace common_lib
