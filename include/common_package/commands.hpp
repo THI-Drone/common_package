@@ -309,7 +309,8 @@ class CommandDefinitions {
      * Retrieves the definition for a given command type.
      *
      * @param type The type of the command.
-     * @return The definition of the command as a map of string keys to JsonKeyDefinition values.
+     * @return The definition of the command as a map of string keys to
+     * JsonKeyDefinition values.
      * @throws std::runtime_error if the type is unknown.
      */
     static const std::map<const std::string, const JsonKeyDefinition>
