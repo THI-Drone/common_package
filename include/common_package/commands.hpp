@@ -30,6 +30,8 @@ typedef enum data_type {
     number_integer,
     number_unsigned,
     string,
+    array,
+    object,
 } data_type_t;
 
 struct JsonKeyDefinition {
@@ -62,6 +64,10 @@ struct JsonKeyDefinition {
                 return "int";
             case number_unsigned:
                 return "uint";
+            case array:
+                return "array";
+            case object:
+                return "object";
             default:
                 throw std::runtime_error(
                     "JsonKeyDefinition::data_type_to_string: "
@@ -104,6 +110,49 @@ struct JsonKeyDefinition {
 
         // Every other data type will default to true
         return true;
+    }
+
+    bool type_check(const nlohmann::json::const_iterator json_iter) const {
+        bool type_check = false;
+        for (const auto &data_type :
+             data_types)  // Loop through all the allowed data types
+        {
+            switch (data_type) {
+                case null:
+                    if (json_iter->is_null()) type_check = true;
+                    break;
+                case boolean:
+                    if (json_iter->is_boolean()) type_check = true;
+                    break;
+                case number:
+                    if (json_iter->is_number()) type_check = true;
+                    break;
+                case number_float:
+                    if (json_iter->is_number_float()) type_check = true;
+                    break;
+                case number_integer:
+                    if (json_iter->is_number_integer()) type_check = true;
+                    break;
+                case number_unsigned:
+                    if (json_iter->is_number_unsigned()) type_check = true;
+                    break;
+                case array:
+                    if (json_iter->is_array()) type_check = true;
+                    break;
+                case object:
+                    if (json_iter->is_object()) type_check = true;
+                    break;
+                default:
+                    throw std::runtime_error(
+                        "JsonKeyDefinition::type_check: "
+                        "Unknown data_type provided: " +
+                        data_type);
+            }
+
+            if (type_check) break;
+        }
+
+        return type_check;
     }
 
     /**
@@ -186,7 +235,7 @@ class CommandDefinitions {
      * they can have
      * @throws std::runtime_error with an error message why the check failed
      */
-    static nlohmann::json parse_check_json(
+    static nlohmann::json parse_check_json_str(
         const std::string &json_str,
         const std::map<const std::string, const JsonKeyDefinition> &definition);
 
@@ -194,8 +243,8 @@ class CommandDefinitions {
      * @brief Checks a JSON object against a given definition
      *
      * Only use this version if you already have a json object.
-     * If you only have a string, use the other overload instead to do a proper
-     * parsing.
+     * If you only have a string, use the `parse_check_json_str` function
+     * instead to do a proper parsing.
      *
      * - Checks that no undefined keys are in the JSON
      * - Checks that all required keys exist

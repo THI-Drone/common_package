@@ -17,7 +17,7 @@ using namespace common_lib;
  * they can have
  * @throws std::runtime_error with an error message why the check failed
  */
-nlohmann::json CommandDefinitions::parse_check_json(
+nlohmann::json CommandDefinitions::parse_check_json_str(
     const std::string &json_str,
     const std::map<const std::string, const JsonKeyDefinition> &definition) {
     nlohmann::json candidate;  // The candidate that will be checked
@@ -38,8 +38,8 @@ nlohmann::json CommandDefinitions::parse_check_json(
  * @brief Checks a JSON object against a given definition
  *
  * Only use this version if you already have a json object.
- * If you only have a string, use the other overload instead to do a proper
- * parsing.
+ * If you only have a string, use the `parse_check_json_str` function
+ * instead to do a proper parsing.
  *
  * - Checks that no undefined keys are in the JSON
  * - Checks that all required keys exist
@@ -128,7 +128,7 @@ nlohmann::json CommandDefinitions::parse_check_json(
         }
 
         // Check that type of value matches the definition
-        bool type_check = false;
+        bool type_check = json_definition.type_check(search);
         for (const auto &data_type :
              json_definition
                  .data_types)  // Loop through all the allowed data types
