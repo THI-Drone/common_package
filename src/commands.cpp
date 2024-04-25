@@ -27,7 +27,7 @@ nlohmann::json CommandDefinitions::parse_check_json_str(
         candidate = nlohmann::json::parse(json_str);
     } catch (const nlohmann::json::parse_error &e) {
         throw std::runtime_error(
-            "CommandDefinitions::parse_check_json: Failed to parse JSON: " +
+            "CommandDefinitions::parse_check_json_str: Failed to parse JSON: " +
             std::string(e.what()));
     }
 
@@ -129,38 +129,6 @@ nlohmann::json CommandDefinitions::parse_check_json(
 
         // Check that type of value matches the definition
         bool type_check = json_definition.type_check(search);
-        for (const auto &data_type :
-             json_definition
-                 .data_types)  // Loop through all the allowed data types
-        {
-            switch (data_type) {
-                case null:
-                    if (search->is_null()) type_check = true;
-                    break;
-                case boolean:
-                    if (search->is_boolean()) type_check = true;
-                    break;
-                case number:
-                    if (search->is_number()) type_check = true;
-                    break;
-                case number_float:
-                    if (search->is_number_float()) type_check = true;
-                    break;
-                case number_integer:
-                    if (search->is_number_integer()) type_check = true;
-                    break;
-                case number_unsigned:
-                    if (search->is_number_unsigned()) type_check = true;
-                    break;
-                default:
-                    throw std::runtime_error(
-                        "CommandDefinitions::parse_check_json: "
-                        "Unknown data_type provided: " +
-                        data_type);
-            }
-
-            if (type_check) break;
-        }
 
         if (!type_check)  // Type check failed
         {
@@ -185,8 +153,8 @@ nlohmann::json CommandDefinitions::parse_check_json(
 
             std::string error_msg =
                 "CommandDefinitions::parse_check_json: [Key: '" + key +
-                "'] Value '" + search->dump() +
-                "' is of the wrong type. Allowed types: " + allowed_types;
+                "'] Value '" + search->dump(4) +
+                "' is of the wrong type. Allowed type(s): " + allowed_types;
 
             throw std::runtime_error(error_msg);
         }

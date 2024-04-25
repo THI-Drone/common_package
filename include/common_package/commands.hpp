@@ -112,6 +112,12 @@ struct JsonKeyDefinition {
         return true;
     }
 
+    /**
+     * Checks if the given JSON iterator matches any of the allowed data types.
+     *
+     * @param json_iter The JSON iterator to be checked.
+     * @return True if the JSON iterator matches any of the allowed data types, false otherwise.
+     */
     bool type_check(const nlohmann::json::const_iterator json_iter) const {
         bool type_check = false;
         for (const auto &data_type :
@@ -146,7 +152,7 @@ struct JsonKeyDefinition {
                     throw std::runtime_error(
                         "JsonKeyDefinition::type_check: "
                         "Unknown data_type provided: " +
-                        data_type);
+                        std::to_string(data_type));
             }
 
             if (type_check) break;
