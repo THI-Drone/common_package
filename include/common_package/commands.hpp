@@ -74,7 +74,7 @@ namespace common_lib
          * @param json_iter The JSON iterator to check.
          * @return True if the JSON iterator is within the bounds or the data type is not supported, false otherwise.
          */
-        bool check_bounds(const nlohmann::detail::iter_impl<const nlohmann::json> json_iter) const
+        bool check_bounds(const nlohmann::json::const_iterator json_iter) const
         {
             for (const auto &data_type : data_types)
             {
@@ -168,7 +168,7 @@ namespace common_lib
          * @param definition Definition of what keys shall be included and what type they can have
          * @throws std::runtime_error with an error message why the check failed
          */
-        static nlohmann::json parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> definition);
+        static nlohmann::json parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> &definition);
 
         /**
          * @brief Checks a JSON object against a given definition
@@ -186,7 +186,7 @@ namespace common_lib
          * @param definition Definition of what keys shall be included and what type they can have
          * @throws std::runtime_error with an error message why the check failed
          */
-        static nlohmann::json parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> definition);
+        static nlohmann::json parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> &definition);
 
         /**
          * Returns a map containing the definition of waypoint command keys.

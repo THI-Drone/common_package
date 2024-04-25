@@ -15,7 +15,7 @@ using namespace common_lib;
  * @param definition Definition of what keys shall be included and what type they can have
  * @throws std::runtime_error with an error message why the check failed
  */
-nlohmann::json CommandDefinitions::parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> definition)
+nlohmann::json CommandDefinitions::parse_check_json(const std::string &json_str, const std::map<std::string, JsonKeyDefinition> &definition)
 {
     nlohmann::json candidate; // The candidate that will be checked
 
@@ -48,7 +48,7 @@ nlohmann::json CommandDefinitions::parse_check_json(const std::string &json_str,
  * @param definition Definition of what keys shall be included and what type they can have
  * @throws std::runtime_error with an error message why the check failed
  */
-nlohmann::json CommandDefinitions::parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> definition)
+nlohmann::json CommandDefinitions::parse_check_json(const nlohmann::json &json_obj, const std::map<std::string, JsonKeyDefinition> &definition)
 {
     // Check that all keys are allowed
     for (const auto &[key, val] : json_obj.items())
