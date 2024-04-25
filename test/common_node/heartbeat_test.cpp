@@ -1,3 +1,5 @@
+#include "interfaces/msg/heartbeat.hpp"
+
 #include <gtest/gtest.h>
 
 #include <chrono>

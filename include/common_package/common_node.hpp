@@ -1,12 +1,20 @@
 #pragma once
 
+<<<<<<< HEAD
 #include "rclcpp/rclcpp.hpp"
+=======
+>>>>>>> dev
 #include <chrono>
 #include <cinttypes>
 #include <functional>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
+<<<<<<< HEAD
+=======
+
+#include "rclcpp/rclcpp.hpp"
+>>>>>>> dev
 
 // Message includes
 #include "interfaces/msg/heartbeat.hpp"

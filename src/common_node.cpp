@@ -12,6 +12,7 @@ using namespace common_lib;
  * @return void
  */
 void CommonNode::heartbeat_timer_callback() {
+<<<<<<< HEAD
   interfaces::msg::Heartbeat message;
   message.sender_id = this->get_fully_qualified_name();
   message.active = node_active;
@@ -22,6 +23,19 @@ void CommonNode::heartbeat_timer_callback() {
                "CommonNode::heartbeat_timer_callback: Published heartbeat "
                "message with sender_id: %s, tick: %u, active: %d",
                this->get_fully_qualified_name(), message.tick, message.active);
+=======
+    interfaces::msg::Heartbeat message;
+    message.sender_id = this->get_fully_qualified_name();
+    message.active = node_active;
+    message.tick = ++heartbeat_tick;
+    message.time_stamp = this->now();
+    heartbeat_publisher->publish(message);
+    RCLCPP_DEBUG(this->get_logger(),
+                 "CommonNode::heartbeat_timer_callback: Published heartbeat "
+                 "message with sender_id: %s, tick: %u, active: %d",
+                 this->get_fully_qualified_name(), message.tick,
+                 message.active);
+>>>>>>> dev
 }
 
 /**
@@ -72,15 +86,22 @@ void CommonNode::job_finished(const uint8_t error_code,
  * @param error_message The error message associated with the job completion.
  */
 void CommonNode::job_finished(const std::string &error_message) {
+<<<<<<< HEAD
   // format error_message to JSON
   nlohmann::json payload;
   payload["error_msg"] = error_message;
+=======
+    // format error_message to JSON
+    nlohmann::json payload;
+    payload["error_msg"] = error_message;
+>>>>>>> dev
 
   interfaces::msg::JobFinished msg;
 
   msg.sender_id = this->get_fully_qualified_name();
   msg.error_code = EXIT_FAILURE;
 
+<<<<<<< HEAD
   try {
     msg.payload = payload.dump();
   } catch (const nlohmann::json::parse_error &e) {
@@ -94,6 +115,22 @@ void CommonNode::job_finished(const std::string &error_message) {
                "CommonNode::job_finished: Sent job_finished message with error "
                "message: '%s' and EXIT_FAILURE error code",
                error_message.c_str());
+=======
+    try {
+        msg.payload = payload.dump();
+    } catch (const nlohmann::json::parse_error &e) {
+        RCLCPP_FATAL(this->get_logger(),
+                     "CommonNode::job_finished: Payload is not a valid JSON. "
+                     "Stopping node.");
+        exit(EXIT_FAILURE);
+    }
+
+    job_finished_publisher->publish(msg);
+    RCLCPP_DEBUG(this->get_logger(),
+                 "CommonNode::job_finished: Sent job_finished message with "
+                 "error message: '%s' and EXIT_FAILURE error code",
+                 error_message.c_str());
+>>>>>>> dev
 
   // Deactivate node
   deactivate();
@@ -106,6 +143,7 @@ void CommonNode::job_finished(const std::string &error_message) {
  * Additionally, deactivates the node.
  */
 void CommonNode::job_finished() {
+<<<<<<< HEAD
   interfaces::msg::JobFinished msg;
 
   msg.sender_id = this->get_fully_qualified_name();
@@ -117,6 +155,19 @@ void CommonNode::job_finished() {
   RCLCPP_DEBUG(
       this->get_logger(),
       "CommonNode::job_finished: Sent job_finished message indicating success");
+=======
+    interfaces::msg::JobFinished msg;
+
+    msg.sender_id = this->get_fully_qualified_name();
+    msg.error_code =
+        EXIT_SUCCESS;    // set error code to EXIT_SUCCESS to indicate success
+    msg.payload = "{}";  // payload is empty JSON
+
+    job_finished_publisher->publish(msg);
+    RCLCPP_DEBUG(this->get_logger(),
+                 "CommonNode::job_finished: Sent job_finished message "
+                 "indicating success");
+>>>>>>> dev
 
   // Deactivate node
   deactivate();

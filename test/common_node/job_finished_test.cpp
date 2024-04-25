@@ -1,3 +1,5 @@
+#include "interfaces/msg/job_finished.hpp"
+
 #include <gtest/gtest.h>
 
 #include <chrono>
