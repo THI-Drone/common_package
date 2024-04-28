@@ -119,18 +119,21 @@ class CommonNode : public rclcpp::Node {
      */
     void heartbeat_timer_callback();
 
-    bool node_active = false;  ///< Indicating if node is currently active and
-                               ///< sending commands to interface node
-    static constexpr uint16_t heartbeat_period_ms =
-        500;  ///< Heartbeat period in ms
-    rclcpp::TimerBase::SharedPtr
-        heartbeat_timer;  ///< Timer for sending heartbeat messages
+    /// Indicating if node is currently active and sending commands to interface
+    /// node
+    bool node_active = false;
+    /// Heartbeat period in ms
+    static constexpr uint16_t heartbeat_period_ms = 500;
+    /// Timer for sending heartbeat messages
+    rclcpp::TimerBase::SharedPtr heartbeat_timer;
+    /// Publisher for the "heartbeat" topic
     rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr
-        heartbeat_publisher;  ///< Publisher for the "heartbeat" topic
-    interfaces::msg::Heartbeat::_tick_type heartbeat_tick =
-        0;  ///< Tick counting upwards with every heartbeat
+        heartbeat_publisher;
+    /// Tick counting upwards with every heartbeat
+    interfaces::msg::Heartbeat::_tick_type heartbeat_tick = 0;
 
+    /// Publisher for the "job_finished" topic
     rclcpp::Publisher<interfaces::msg::JobFinished>::SharedPtr
-        job_finished_publisher;  ///< Publisher for the "job_finished" topic
+        job_finished_publisher;
 };
 }  // namespace common_lib
