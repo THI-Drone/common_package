@@ -30,16 +30,16 @@ class CommonNode : public rclcpp::Node {
      * @param id Unique name of the node.
      */
     CommonNode(const std::string &id) : Node(id) {
-        // Create a publisher for the "heartbeat" topic
+        /// Create a publisher for the "heartbeat" topic
         heartbeat_publisher =
             this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 1);
 
-        // Create a timer that sends a heartbeat message every 500ms
+        /// Create a timer that sends a heartbeat message every 500ms
         heartbeat_timer = this->create_wall_timer(
             std::chrono::milliseconds(heartbeat_period_ms),
             std::bind(&CommonNode::heartbeat_timer_callback, this));
 
-        // Create a publisher for the "job_finished" topic
+        /// Create a publisher for the "job_finished" topic
         job_finished_publisher =
             this->create_publisher<interfaces::msg::JobFinished>("job_finished",
                                                                  10);
