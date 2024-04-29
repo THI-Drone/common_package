@@ -180,21 +180,38 @@ struct JsonKeyDefinition {
      * specified parameters. Use this constructor if you want to allow multiple
      * data types.
      *
+     * @note If max_val < min_val, the two values will be exchanged
+     *
      * @param required A boolean indicating whether the key is required or not.
      * @param data_types A reference to an unordered set of data types.
      * @param min_val An optional minimum value for the key (default:
      * std::nullopt).
      * @param max_val An optional maximum value for the key (default:
      * std::nullopt).
+     *
+     * @throw std::runtime_error if data_types is empty
      */
     JsonKeyDefinition(const bool required,
                       const std::unordered_set<data_type_t> &data_types,
                       std::optional<const float> min_val = std::nullopt,
                       std::optional<const float> max_val = std::nullopt) {
         this->required = required;
+
+        if (data_types.size() <= 0)
+            throw std::runtime_error(
+                "JsonKeyDefinition::JsonKeyDefinition: data_types is empty");
+
         this->data_types = data_types;
-        this->min_val = min_val;
-        this->max_val = max_val;
+
+        if ((min_val.has_value() && max_val.has_value()) &&
+            (min_val > max_val)) {
+            // switch min_val and max_val
+            this->min_val = max_val;
+            this->max_val = min_val;
+        } else {
+            this->min_val = min_val;
+            this->max_val = max_val;
+        }
     }
 
     /**
@@ -203,6 +220,8 @@ struct JsonKeyDefinition {
      * This constructor initializes a JsonKeyDefinition object with the
      * specified parameters. Use this constructor if you just want to allow one
      * data type.
+     *
+     * @note If max_val < min_val, the two values will be exchanged
      *
      * @param required A boolean indicating whether the key is required or not.
      * @param data_type The data type of the key.
@@ -213,12 +232,10 @@ struct JsonKeyDefinition {
      */
     JsonKeyDefinition(const bool required, const data_type_t data_type,
                       std::optional<const float> min_val = std::nullopt,
-                      std::optional<const float> max_val = std::nullopt) {
-        this->required = required;
-        this->data_types.insert(data_type);
-        this->min_val = min_val;
-        this->max_val = max_val;
-    }
+                      std::optional<const float> max_val = std::nullopt)
+        : JsonKeyDefinition(required,
+                            std::unordered_set<data_type_t>{data_type}, min_val,
+                            max_val) {}
 };
 
 /**
