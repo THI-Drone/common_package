@@ -94,18 +94,23 @@ struct JsonKeyDefinition {
      * is not supported, false otherwise.
      */
     bool check_bounds(const nlohmann::json::const_iterator json_iter) const {
+        JsonKeyDefinition jsk_type_check(false, number);
+
         for (const auto &data_type : data_types) {
             switch (data_type) {
                 case number:
                 case number_float:
                 case number_integer:
                 case number_unsigned:
-                    // Check is only supported for the above data types
-                    if (min_val.has_value() && type_check(json_iter) &&
+                    // Check is only supported for the above data types and
+                    // json_iter must be of one of those types, too
+                    if (min_val.has_value() &&
+                        jsk_type_check.type_check(json_iter) &&
                         *json_iter < min_val)
                         return false;
 
-                    if (max_val.has_value() && type_check(json_iter) &&
+                    if (max_val.has_value() &&
+                        jsk_type_check.type_check(json_iter) &&
                         *json_iter > max_val)
                         return false;
 
