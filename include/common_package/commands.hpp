@@ -86,6 +86,9 @@ struct JsonKeyDefinition {
      * specified, all values will be accepted. Every data type that is not of
      * any `number*` data type will always return true.
      *
+     * @note Also returns true if the json_iter has a type different from
+     * `number*`
+     *
      * @param json_iter The JSON iterator to check.
      * @return True if the JSON iterator is within the bounds or the data type
      * is not supported, false otherwise.
@@ -98,10 +101,12 @@ struct JsonKeyDefinition {
                 case number_integer:
                 case number_unsigned:
                     // Check is only supported for the above data types
-                    if (min_val.has_value() && *json_iter < min_val)
+                    if (min_val.has_value() && type_check(json_iter) &&
+                        *json_iter < min_val)
                         return false;
 
-                    if (max_val.has_value() && *json_iter > max_val)
+                    if (max_val.has_value() && type_check(json_iter) &&
+                        *json_iter > max_val)
                         return false;
 
                     return true;
