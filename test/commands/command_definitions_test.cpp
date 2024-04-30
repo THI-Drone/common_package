@@ -222,4 +222,56 @@ TEST(common_package, parse_check_json_test) {
                          std::runtime_error);
         }
     }
+
+    {
+        // Check that value is in bounds and of the correct type
+
+        const std::map<const std::string, const JsonKeyDefinition> def{
+            {"number_unsigned", {true, number_unsigned, std::nullopt, 6}}};
+
+        {
+            const nlohmann::json json = {{"number_unsigned", 3u}};
+            ASSERT_NO_THROW(CommandDefinitions::parse_check_json(json, def));
+        }
+        {
+            const nlohmann::json json = {{"number_unsigned", 2u}};
+            ASSERT_NO_THROW(CommandDefinitions::parse_check_json(json, def));
+        }
+        {
+            const nlohmann::json json = {{"number_unsigned", 3.0}};
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
+        }
+        {
+            const nlohmann::json json = {{"number_unsigned", 7u}};
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
+        }
+    }
+
+    {
+        // Check that value is in bounds and of the correct type
+
+        const std::map<const std::string, const JsonKeyDefinition> def{
+            {"number_unsigned", {true, number_unsigned, 3}}};
+
+        {
+            const nlohmann::json json = {{"number_unsigned", 3u}};
+            ASSERT_NO_THROW(CommandDefinitions::parse_check_json(json, def));
+        }
+        {
+            const nlohmann::json json = {{"number_unsigned", 2u}};
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
+        }
+        {
+            const nlohmann::json json = {{"number_unsigned", 3.0}};
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
+        }
+        {
+            const nlohmann::json json = {{"number_unsigned", 7u}};
+            ASSERT_NO_THROW(CommandDefinitions::parse_check_json(json, def));
+        }
+    }
 }

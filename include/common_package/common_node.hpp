@@ -11,7 +11,6 @@
 #include "rclcpp/node_options.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-
 // Message includes
 #include "interfaces/msg/heartbeat.hpp"
 #include "interfaces/msg/job_finished.hpp"
