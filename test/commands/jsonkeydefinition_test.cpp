@@ -2,8 +2,8 @@
 
 #include <cinttypes>
 #include <nlohmann/json.hpp>
-#include <unordered_set>
 #include <stdexcept>
+#include <unordered_set>
 
 #include "common_package/commands.hpp"
 

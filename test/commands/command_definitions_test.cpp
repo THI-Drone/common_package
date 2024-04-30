@@ -164,30 +164,34 @@ TEST(common_package, parse_check_json_test) {
                                          {"array", {1, 2, 3, 4, 5}},
                                          {"object", {{"one", 1}, {"two", 2}}}};
 
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def), std::runtime_error);
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
         }
 
         {
             // One unknown key
-            const nlohmann::json json = {{"null", nullptr},
-                                         {"boolean", true},
-                                         {"unknown_key", "this shouldn't be here"},
-                                         {"number", 123},
-                                         {"number_float", 1.234},
-                                         {"number_integer", -5},
-                                         {"number_unsigned", 3u},
-                                         {"string", "abc"},
-                                         {"array", {1, 2, 3, 4, 5}},
-                                         {"object", {{"one", 1}, {"two", 2}}}};
+            const nlohmann::json json = {
+                {"null", nullptr},
+                {"boolean", true},
+                {"unknown_key", "this shouldn't be here"},
+                {"number", 123},
+                {"number_float", 1.234},
+                {"number_integer", -5},
+                {"number_unsigned", 3u},
+                {"string", "abc"},
+                {"array", {1, 2, 3, 4, 5}},
+                {"object", {{"one", 1}, {"two", 2}}}};
 
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def), std::runtime_error);
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
         }
 
         {
             // All keys missing
             const nlohmann::json json = {};
 
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def), std::runtime_error);
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
         }
     }
 
@@ -204,15 +208,18 @@ TEST(common_package, parse_check_json_test) {
         }
         {
             const nlohmann::json json = {{"number_unsigned", 2u}};
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def), std::runtime_error);
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
         }
         {
             const nlohmann::json json = {{"number_unsigned", 3.0}};
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def), std::runtime_error);
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
         }
         {
             const nlohmann::json json = {{"number_unsigned", 7u}};
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def), std::runtime_error);
+            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                         std::runtime_error);
         }
     }
 }
