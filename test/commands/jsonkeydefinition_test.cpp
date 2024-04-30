@@ -364,7 +364,8 @@ TEST(common_package, json_key_definition_type_check_and_bounds_check) {
 }
 
 TEST(common_package, json_key_definition_data_type_to_string) {
-    // Test that the data_type_to_string function returns the correct string representation for each valid data type
+    // Test that the data_type_to_string function returns the correct string
+    // representation for each valid data type
     ASSERT_EQ(JsonKeyDefinition::data_type_to_string(null), "null");
     ASSERT_EQ(JsonKeyDefinition::data_type_to_string(boolean), "bool");
     ASSERT_EQ(JsonKeyDefinition::data_type_to_string(number), "number");
@@ -375,7 +376,8 @@ TEST(common_package, json_key_definition_data_type_to_string) {
     ASSERT_EQ(JsonKeyDefinition::data_type_to_string(array), "array");
     ASSERT_EQ(JsonKeyDefinition::data_type_to_string(object), "object");
 
-    // Test that the data_type_to_string function throws a std::runtime_error when an invalid data type is passed
+    // Test that the data_type_to_string function throws a std::runtime_error
+    // when an invalid data type is passed
     ASSERT_THROW(JsonKeyDefinition::data_type_to_string((data_type_t)-1),
                  std::runtime_error);
 }
