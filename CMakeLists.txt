@@ -52,7 +52,8 @@ if(BUILD_TESTING)
                   test/main_test.cpp
                   test/common_node/heartbeat_test.cpp
                   test/common_node/job_finished_test.cpp
-                  test/commands/jsonkeydefinition_test.cpp)
+                  test/commands/jsonkeydefinition_test.cpp
+                  test/commands/command_definitions_test.cpp)
   target_include_directories(${PROJECT_NAME}_test PUBLIC
           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
           $<INSTALL_INTERFACE:include>

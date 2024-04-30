@@ -3,6 +3,7 @@
 #include <cinttypes>
 #include <nlohmann/json.hpp>
 #include <unordered_set>
+#include <stdexcept>
 
 #include "common_package/commands.hpp"
 
@@ -276,8 +277,6 @@ TEST(common_package, json_key_definition_type_check_and_bounds_check) {
 
     for (const auto& data_type : data_types) {
         JsonKeyDefinition jsk(false, data_type);
-        printf("Datatype: %s\n",
-               JsonKeyDefinition::data_type_to_string(data_type).c_str());
 
         {
             // Test with null value
