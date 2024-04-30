@@ -246,6 +246,23 @@ struct JsonKeyDefinition {
         : JsonKeyDefinition(required,
                             std::unordered_set<data_type_t>{data_type}, min_val,
                             max_val) {}
+
+    /**
+     * @brief Overloaded equality operator for comparing two JsonKeyDefinition
+     * objects.
+     *
+     * This operator compares the current JsonKeyDefinition object with another
+     * object of the same type. It checks if all the member variables of both
+     * objects are equal.
+     *
+     * @param other The JsonKeyDefinition object to compare with.
+     * @return true if the objects are equal, false otherwise.
+     */
+    bool operator==(const JsonKeyDefinition &other) const {
+        return this->required == other.required &&
+               this->data_types == other.data_types &&
+               this->min_val == other.min_val && this->max_val == other.max_val;
+    }
 };
 
 /**
