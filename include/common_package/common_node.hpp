@@ -7,7 +7,10 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+#include "rclcpp/duration.hpp"
+#include "rclcpp/node_options.hpp"
 #include "rclcpp/rclcpp.hpp"
+
 
 // Message includes
 #include "interfaces/msg/heartbeat.hpp"
@@ -29,7 +32,9 @@ class CommonNode : public rclcpp::Node {
      * @brief Constructor for creating a new CommonNode.
      * @param id Unique name of the node.
      */
-    CommonNode(const std::string &id) : Node(id) {
+    CommonNode(const std::string &id,
+               const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
+        : Node(id, options) {
         /// Create a publisher for the "heartbeat" topic
         heartbeat_publisher =
             this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 1);
