@@ -282,7 +282,8 @@ class CommandDefinitions {
      *
      * - Checks that no undefined keys are in the JSON
      * - Checks that all required keys exist
-     * - Checks that all values have the correct type
+     * - Checks that all values have the correct type and are withing bounds (if
+     * applicable)
      *
      * @note The function can only be fully used on shallow JSONs. Arrays or
      * encapsulations contents' will not be checked! Call this function several
@@ -306,7 +307,8 @@ class CommandDefinitions {
      *
      * - Checks that no undefined keys are in the JSON
      * - Checks that all required keys exist
-     * - Checks that all values have the correct type
+     * - Checks that all values have the correct type and are withing bounds (if
+     * applicable)
      *
      * @note The function can only be fully used on shallow JSONs. Arrays or
      * encapsulations contents' will not be checked! Call this function several
