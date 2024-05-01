@@ -197,7 +197,7 @@ TEST(common_package, json_key_definition_type_check_and_bounds_check) {
             ASSERT_TRUE(jsk.check_bounds(json.begin()));
         }
         {
-            // Test with invalid integer value (outside the specified range)
+            // Test with invalid integer value
             nlohmann::json json = {-1};
             ASSERT_FALSE(jsk.type_check(json.begin()));
             ASSERT_TRUE(jsk.check_bounds(json.begin()));
