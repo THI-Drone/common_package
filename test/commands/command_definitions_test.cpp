@@ -197,39 +197,40 @@ TEST(common_package, parse_check_json_test) {
 
     // Value checks
     {
-        // Check that value is in bounds and of the correct type
+        {
+            // Check that value is in bounds and of the correct type
+            
+            // Define the key and its corresponding definition
+            const std::map<const std::string, const JsonKeyDefinition> def{
+                {"number_unsigned", {true, number_unsigned, 3, 6}}};
 
-        // Define the key and its corresponding definition
-        const std::map<const std::string, const JsonKeyDefinition> def{
-            {"number_unsigned", {true, number_unsigned, 3, 6}}};
+            // Test cases for the key "number_unsigned"
+            {
+                // Test case: value is within the specified bounds
+                const nlohmann::json json = {{"number_unsigned", 3u}};
+                ASSERT_NO_THROW(
+                    CommandDefinitions::parse_check_json(json, def));
+            }
+            {
+                // Test case: value is below the specified lower bound
+                const nlohmann::json json = {{"number_unsigned", 2u}};
+                ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                             std::runtime_error);
+            }
+            {
+                // Test case: value is not of the correct type
+                const nlohmann::json json = {{"number_unsigned", 3.0}};
+                ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                             std::runtime_error);
+            }
+            {
+                // Test case: value is above the specified upper bound
+                const nlohmann::json json = {{"number_unsigned", 7u}};
+                ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
+                             std::runtime_error);
+            }
+        }
 
-        // Test cases for the key "number_unsigned"
-        {
-            // Test case: value is within the specified bounds
-            const nlohmann::json json = {{"number_unsigned", 3u}};
-            ASSERT_NO_THROW(CommandDefinitions::parse_check_json(json, def));
-        }
-        {
-            // Test case: value is below the specified lower bound
-            const nlohmann::json json = {{"number_unsigned", 2u}};
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
-                         std::runtime_error);
-        }
-        {
-            // Test case: value is not of the correct type
-            const nlohmann::json json = {{"number_unsigned", 3.0}};
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
-                         std::runtime_error);
-        }
-        {
-            // Test case: value is above the specified upper bound
-            const nlohmann::json json = {{"number_unsigned", 7u}};
-            ASSERT_THROW(CommandDefinitions::parse_check_json(json, def),
-                         std::runtime_error);
-        }
-    }
-
-    {
         {
             // Check that value is in bounds and of the correct type
 
