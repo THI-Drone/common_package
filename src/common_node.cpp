@@ -21,8 +21,7 @@ void CommonNode::heartbeat_timer_callback() {
     RCLCPP_DEBUG(this->get_logger(),
                  "CommonNode::heartbeat_timer_callback: Published heartbeat "
                  "message with sender_id: %s, tick: %u, active: %d",
-                 this->get_name(), message.tick,
-                 message.active);
+                 this->get_name(), message.tick, message.active);
 }
 
 /**
