@@ -51,7 +51,7 @@ TEST(common_package, job_finished_successfull) {
                  &executor](interfaces::msg::JobFinished::ConstSharedPtr msg) {
                     RCLCPP_DEBUG(test_node->get_logger(),
                                  "Got job_finished message");
-                    ASSERT_EQ(msg->sender_id, "/common_node");
+                    ASSERT_EQ(msg->sender_id, "common_node");
                     ASSERT_EQ(msg->error_code, EXIT_SUCCESS);
                     ASSERT_EQ(nlohmann::json::parse(msg->payload),
                               nlohmann::json::parse("{}"));
@@ -92,7 +92,7 @@ TEST(common_package, job_finished_error_message) {
                  &executor](interfaces::msg::JobFinished::ConstSharedPtr msg) {
                     RCLCPP_DEBUG(test_node->get_logger(),
                                  "Got job_finished message");
-                    ASSERT_EQ(msg->sender_id, "/common_node");
+                    ASSERT_EQ(msg->sender_id, "common_node");
                     ASSERT_EQ(msg->error_code, EXIT_FAILURE);
 
                     nlohmann::json payload_check;
@@ -137,7 +137,7 @@ TEST(common_package, job_finished_custom_payload) {
                  &executor](interfaces::msg::JobFinished::ConstSharedPtr msg) {
                     RCLCPP_DEBUG(test_node->get_logger(),
                                  "Got job_finished message");
-                    ASSERT_EQ(msg->sender_id, "/common_node");
+                    ASSERT_EQ(msg->sender_id, "common_node");
                     ASSERT_EQ(msg->error_code, 5);
 
                     nlohmann::json payload_check;

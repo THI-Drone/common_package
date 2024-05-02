@@ -13,7 +13,7 @@ using namespace common_lib;
  */
 void CommonNode::heartbeat_timer_callback() {
     interfaces::msg::Heartbeat message;
-    message.sender_id = this->get_fully_qualified_name();
+    message.sender_id = this->get_name();
     message.active = node_active;
     message.tick = ++heartbeat_tick;
     message.time_stamp = this->now();
@@ -21,7 +21,7 @@ void CommonNode::heartbeat_timer_callback() {
     RCLCPP_DEBUG(this->get_logger(),
                  "CommonNode::heartbeat_timer_callback: Published heartbeat "
                  "message with sender_id: %s, tick: %u, active: %d",
-                 this->get_fully_qualified_name(), message.tick,
+                 this->get_name(), message.tick,
                  message.active);
 }
 
@@ -41,7 +41,7 @@ void CommonNode::job_finished(const uint8_t error_code,
                               const nlohmann::json &payload) {
     interfaces::msg::JobFinished msg;
 
-    msg.sender_id = this->get_fully_qualified_name();
+    msg.sender_id = this->get_name();
     msg.error_code = error_code;
 
     try {
@@ -80,7 +80,7 @@ void CommonNode::job_finished(const std::string &error_message) {
 
     interfaces::msg::JobFinished msg;
 
-    msg.sender_id = this->get_fully_qualified_name();
+    msg.sender_id = this->get_name();
     msg.error_code = EXIT_FAILURE;
 
     try {
@@ -112,7 +112,7 @@ void CommonNode::job_finished(const std::string &error_message) {
 void CommonNode::job_finished() {
     interfaces::msg::JobFinished msg;
 
-    msg.sender_id = this->get_fully_qualified_name();
+    msg.sender_id = this->get_name();
     msg.error_code =
         EXIT_SUCCESS;    // set error code to EXIT_SUCCESS to indicate success
     msg.payload = "{}";  // payload is empty JSON
