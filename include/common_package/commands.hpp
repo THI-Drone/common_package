@@ -346,10 +346,7 @@ class CommandDefinitions {
               MAX_FLIGHT_HEIGHT_CM}},
             {"target_height_cm",
              {true, number_unsigned, 0, MAX_FLIGHT_HEIGHT_CM}},
-            {"horizontal_speed_mps",
-             {true, number, 0.0, MAX_HORIZONTAL_SPEED_MPS}},
-            {"vertical_speed_mps",
-             {true, number, 0.0, MAX_VERTICAL_SPEED_MPS}}};
+            {"speed_mps", {true, number, 0.0, MAX_HORIZONTAL_SPEED_MPS}}};
 
         return definition;
     }
