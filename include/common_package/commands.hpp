@@ -258,7 +258,7 @@ struct JsonKeyDefinition {
      * @param other The JsonKeyDefinition object to compare with.
      * @return true if the objects are equal, false otherwise.
      */
-    bool operator==(const JsonKeyDefinition &other) const {
+    constexpr bool operator==(const JsonKeyDefinition &other) const {
         return this->required == other.required &&
                this->data_types == other.data_types &&
                this->min_val == other.min_val && this->max_val == other.max_val;
