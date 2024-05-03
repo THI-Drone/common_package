@@ -29,15 +29,6 @@ TEST(common_package, command_definition_test) {
         ASSERT_EQ(def1, def2);
     }
     {
-        // Test the definition of the "drop_payload" command
-        static const std::map<const std::string, const JsonKeyDefinition> def1 =
-            CommandDefinitions::get_definition("drop_payload");
-        static const std::map<const std::string, const JsonKeyDefinition> def2 =
-            CommandDefinitions::get_drop_payload_command_definition();
-
-        ASSERT_EQ(def1, def2);
-    }
-    {
         // Test the definition of the "end_mission" command
         static const std::map<const std::string, const JsonKeyDefinition> def1 =
             CommandDefinitions::get_definition("end_mission");

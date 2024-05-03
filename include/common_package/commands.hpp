@@ -366,31 +366,8 @@ class CommandDefinitions {
     static const std::map<const std::string, const JsonKeyDefinition>
     get_detect_marker_command_definition() {
         const std::map<const std::string, const JsonKeyDefinition> definition{
-            {"detection_height_cm",
-             {true, number_unsigned, 0, MAX_FLIGHT_HEIGHT_CM}},
             {"timeout_ms",
-             {true, number_unsigned, 0, 5 /* min */ * 60 * 1000}}};
-
-        return definition;
-    }
-
-    /**
-     * Returns the command definition for the drop payload command.
-     *
-     * The command definition is a map that associates each key with its
-     * corresponding JsonKeyDefinition. The keys in the map represent the
-     * properties of the drop payload command, and the values represent the
-     * definition of each property.
-     *
-     * @return The command definition for the drop payload command.
-     */
-    static const std::map<const std::string, const JsonKeyDefinition>
-    get_drop_payload_command_definition() {
-        const std::map<const std::string, const JsonKeyDefinition> definition{
-            {"drop_height_cm",
-             {true, number_unsigned, 0, MAX_FLIGHT_HEIGHT_CM}},
-            {"drop_duration_ms",
-             {true, number_unsigned, 0, 1 /* min */ * 60 * 1000}}};
+             {true, number_unsigned, 0, 3 /* min */ * 60 * 1000}}};
 
         return definition;
     }
@@ -409,8 +386,6 @@ class CommandDefinitions {
             return get_waypoint_command_definition();
         else if (type == "detect_marker")
             return get_detect_marker_command_definition();
-        else if (type == "drop_payload")
-            return get_drop_payload_command_definition();
         else if (type == "end_mission")
             return {};
         else
