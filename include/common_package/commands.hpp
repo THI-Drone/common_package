@@ -10,14 +10,16 @@
 
 namespace common_lib {
 // Global Defines
-/// Maximum allowed flight height in cm
-constexpr uint16_t MAX_FLIGHT_HEIGHT_CM = 120 /* [m] */ * 100;
-/// Minimum required cruise height in cm
-constexpr uint16_t MIN_CRUISE_HEIGHT_CM = 5 /* [m] */ * 100;
-/// Maximum allowed horizontal speed in m/s
-constexpr float MAX_HORIZONTAL_SPEED_MPS = 12.0 /* [m/s] */;
-/// Maximum allowed vertical speed in m/s
-constexpr float MAX_VERTICAL_SPEED_MPS = 3.0 /* [m/s] */;
+constexpr uint16_t MAX_FLIGHT_HEIGHT_CM =
+    120 /* [m] */ * 100;  //!< Maximum allowed flight height in cm
+constexpr uint16_t MIN_CRUISE_HEIGHT_CM =
+    5 /* [m] */ * 100;  //!< Minimum required cruise height in cm
+constexpr float MAX_HORIZONTAL_SPEED_MPS =
+    12.0 /* [m/s] */;  //!< Maximum allowed horizontal speed in m/s
+constexpr float MAX_VERTICAL_SPEED_MPS =
+    3.0 /* [m/s] */;  //!< Maximum allowed vertical speed in m/s
+constexpr float MIN_SOC_PERCENT =
+    30.0 /* [%] */;  //!< Minimum SOC after which a RTH is triggered
 
 /**
  * @brief Enumeration representing the data types.
@@ -35,14 +37,14 @@ typedef enum data_type {
 } data_type_t;
 
 struct JsonKeyDefinition {
-    /// If true, the value needs to be provided
-    bool required;
-    /// Unsorted set of accepted data types for the specific key
-    std::unordered_set<data_type_t> data_types;
-    /// Min value the value should have (only works with numbers)
-    std::optional<float> min_val;
-    /// Max value the value should have (only works with numbers)
-    std::optional<float> max_val;
+    bool required;  //!< If true, the value needs to be provided
+    std::unordered_set<data_type_t>
+        data_types;  //!< Unsorted set of accepted data types for the specific
+                     //!< key
+    std::optional<float>
+        min_val;  //!< Min value the value should have (only works with numbers)
+    std::optional<float>
+        max_val;  //!< Max value the value should have (only works with numbers)
 
     /**
      * Converts a data_type_t value to its corresponding string representation.
