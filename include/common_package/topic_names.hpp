@@ -3,6 +3,7 @@
 namespace common_lib {
 
 namespace topic_names {
+// Topic names by there message names
 
 // FCC Bridge
 constexpr const char* const BatteryState = "uav_battery_state";
@@ -14,6 +15,7 @@ constexpr const char* const SafetyLimits = "uav_safety_limits";
 constexpr const char* const UAVCommand = "uav_command";
 constexpr const char* const UAVHealth = "uav_health";
 constexpr const char* const UAVWaypointCommand = "uav_waypoint_command";
+constexpr const char *const FlightState = "uav_flight_state";
 
 // Mission Control
 constexpr const char* const Control = "control";
