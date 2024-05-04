@@ -10,8 +10,8 @@
 #include "rclcpp/duration.hpp"
 #include "rclcpp/node_options.hpp"
 #include "rclcpp/rclcpp.hpp"
-
 #include "topic_names.hpp"
+
 
 // Message includes
 #include "interfaces/msg/heartbeat.hpp"
@@ -38,7 +38,8 @@ class CommonNode : public rclcpp::Node {
         : Node(id, options) {
         /// Create a publisher for the "heartbeat" topic
         heartbeat_publisher =
-            this->create_publisher<interfaces::msg::Heartbeat>(topic_names::Heartbeat, 1);
+            this->create_publisher<interfaces::msg::Heartbeat>(
+                topic_names::Heartbeat, 1);
 
         /// Create a timer that sends a heartbeat message every 500ms
         heartbeat_timer = this->create_wall_timer(
@@ -47,8 +48,8 @@ class CommonNode : public rclcpp::Node {
 
         /// Create a publisher for the "job_finished" topic
         job_finished_publisher =
-            this->create_publisher<interfaces::msg::JobFinished>(topic_names::JobFinished,
-                                                                 10);
+            this->create_publisher<interfaces::msg::JobFinished>(
+                topic_names::JobFinished, 10);
     }
 
     /**
