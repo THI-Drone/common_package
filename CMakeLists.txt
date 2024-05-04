@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(JSON_ImplicitConversions OFF) # deactivate implicit type conversion
 
 project(common_package)
 
@@ -17,7 +18,9 @@ find_package(interfaces REQUIRED)
 
 include_directories(include)
 
-add_library(common_lib SHARED src/common_node.cpp)
+add_library(common_lib SHARED
+  src/common_node.cpp
+  src/commands.cpp)
 ament_target_dependencies(common_lib rclcpp interfaces nlohmann_json)
 ament_export_libraries(common_lib)
 ament_export_include_directories(include)
@@ -48,7 +51,9 @@ if(BUILD_TESTING)
   ament_add_gtest(${PROJECT_NAME}_test
                   test/main_test.cpp
                   test/common_node/heartbeat_test.cpp
-                  test/common_node/job_finished_test.cpp)
+                  test/common_node/job_finished_test.cpp
+                  test/commands/jsonkeydefinition_test.cpp
+                  test/commands/command_definitions_test.cpp)
   target_include_directories(${PROJECT_NAME}_test PUBLIC
           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
           $<INSTALL_INTERFACE:include>

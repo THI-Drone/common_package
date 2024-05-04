@@ -6,6 +6,7 @@
 #include <cinttypes>
 
 #include "common_package/common_node.hpp"
+#include "interfaces/msg/heartbeat.hpp"
 #include "rclcpp/executors.hpp"
 #include "rclcpp/logging.hpp"
 #include "rclcpp/node.hpp"
@@ -37,7 +38,7 @@ TEST(common_package, heartbeat_rate) {
                         heartbeat_period + 10)));
                 ASSERT_EQ(last_msg.tick + 1, msg->tick);
                 ASSERT_FALSE(msg->active);
-                ASSERT_EQ(msg->sender_id, "/heartbeat");
+                ASSERT_EQ(msg->sender_id, "heartbeat");
                 last_msg = *msg;
             });
 
@@ -96,7 +97,7 @@ TEST(common_package, heartbeat_activate_deactivate) {
                     << "Delta: " << time_delta.seconds() << "s "
                     << time_delta.nanoseconds() << "ns";
                 ASSERT_EQ(last_msg.tick + 1, msg->tick);
-                ASSERT_EQ(msg->sender_id, "/heartbeat");
+                ASSERT_EQ(msg->sender_id, "heartbeat");
                 ASSERT_EQ(msg->active, heartbeat_node->get_active());
 
                 if (msg->active) {

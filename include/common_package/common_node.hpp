@@ -7,6 +7,8 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+#include "rclcpp/duration.hpp"
+#include "rclcpp/node_options.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 // Message includes
@@ -29,17 +31,19 @@ class CommonNode : public rclcpp::Node {
      * @brief Constructor for creating a new CommonNode.
      * @param id Unique name of the node.
      */
-    CommonNode(const std::string &id) : Node(id) {
-        // Create a publisher for the "heartbeat" topic
+    CommonNode(const std::string &id,
+               const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
+        : Node(id, options) {
+        /// Create a publisher for the "heartbeat" topic
         heartbeat_publisher =
             this->create_publisher<interfaces::msg::Heartbeat>("heartbeat", 1);
 
-        // Create a timer that sends a heartbeat message every 500ms
+        /// Create a timer that sends a heartbeat message every 500ms
         heartbeat_timer = this->create_wall_timer(
             std::chrono::milliseconds(heartbeat_period_ms),
             std::bind(&CommonNode::heartbeat_timer_callback, this));
 
-        // Create a publisher for the "job_finished" topic
+        /// Create a publisher for the "job_finished" topic
         job_finished_publisher =
             this->create_publisher<interfaces::msg::JobFinished>("job_finished",
                                                                  10);
@@ -85,7 +89,9 @@ class CommonNode : public rclcpp::Node {
      *
      * @param error_code The error code associated with the job completion
      * (EXIT_SUCCESS == 0 if no error).
-     * @param payload The payload data associated with the job completion.
+     * @param payload The payload data associated with the job completion. Set
+     * the "error_msg" key to your error message string if you want to have it
+     * appear on the mission control output log.
      */
     void job_finished(const uint8_t error_code, const nlohmann::json &payload);
 
@@ -117,18 +123,21 @@ class CommonNode : public rclcpp::Node {
      */
     void heartbeat_timer_callback();
 
-    bool node_active = false;  ///< Indicating if node is currently active and
-                               ///< sending commands to interface node
-    static constexpr uint16_t heartbeat_period_ms =
-        500;  ///< Heartbeat period in ms
-    rclcpp::TimerBase::SharedPtr
-        heartbeat_timer;  ///< Timer for sending heartbeat messages
+    /// Indicating if node is currently active and sending commands to interface
+    /// node
+    bool node_active = false;
+    /// Heartbeat period in ms
+    static constexpr uint16_t heartbeat_period_ms = 500;
+    /// Timer for sending heartbeat messages
+    rclcpp::TimerBase::SharedPtr heartbeat_timer;
+    /// Publisher for the "heartbeat" topic
     rclcpp::Publisher<interfaces::msg::Heartbeat>::SharedPtr
-        heartbeat_publisher;  ///< Publisher for the "heartbeat" topic
-    interfaces::msg::Heartbeat::_tick_type heartbeat_tick =
-        0;  ///< Tick counting upwards with every heartbeat
+        heartbeat_publisher;
+    /// Tick counting upwards with every heartbeat
+    interfaces::msg::Heartbeat::_tick_type heartbeat_tick = 0;
 
+    /// Publisher for the "job_finished" topic
     rclcpp::Publisher<interfaces::msg::JobFinished>::SharedPtr
-        job_finished_publisher;  ///< Publisher for the "job_finished" topic
+        job_finished_publisher;
 };
 }  // namespace common_lib
