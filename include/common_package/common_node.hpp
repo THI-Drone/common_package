@@ -12,7 +12,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "topic_names.hpp"
 
-
 // Message includes
 #include "interfaces/msg/heartbeat.hpp"
 #include "interfaces/msg/job_finished.hpp"
