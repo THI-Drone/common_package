@@ -23,7 +23,8 @@ namespace common_lib {
 namespace {
 
 /**
- * @brief rosout QoS to explicitly set the rosout for  Nodes subclassing CommonNode
+ * @brief rosout QoS to explicitly set the rosout for Nodes subclassing
+ * CommonNode
  *
  * See:
  * 1.
