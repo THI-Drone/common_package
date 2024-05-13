@@ -27,7 +27,7 @@ TEST(common_package, heartbeat_rate) {
 
     rclcpp::Subscription<interfaces::msg::Heartbeat>::SharedPtr heartbeat_sub =
         test_node->create_subscription<interfaces::msg::Heartbeat>(
-            "heartbeat", 1,
+            topic_names::Heartbeat, 1,
             [&last_msg,
              test_node](interfaces::msg::Heartbeat::ConstSharedPtr msg) {
                 RCLCPP_DEBUG(test_node->get_logger(),
@@ -83,7 +83,7 @@ TEST(common_package, heartbeat_activate_deactivate) {
 
     rclcpp::Subscription<interfaces::msg::Heartbeat>::SharedPtr heartbeat_sub =
         test_node->create_subscription<interfaces::msg::Heartbeat>(
-            "heartbeat", 1,
+            topic_names::Heartbeat, 1,
             [&last_msg, test_node,
              heartbeat_node](interfaces::msg::Heartbeat::ConstSharedPtr msg) {
                 RCLCPP_DEBUG(test_node->get_logger(),
