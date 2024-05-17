@@ -12,7 +12,7 @@ constexpr char const *const MISSION_CONTROL =
     "mission_control";  //!< Node name for the mission control node
 
 constexpr char const *const WAYPOINT =
-    "waypoint";  //!< Node name for the navigate to waypoint node
+    "waypoint_node";  //!< Node name for the navigate to waypoint node
 
 constexpr char const *const QRCODE_SCANNER =
     "qr_code_scanner_node";  //!< Node name for the qr code scanner node
