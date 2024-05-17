@@ -20,9 +20,6 @@ constexpr char const *const QRCODE_SCANNER =
 constexpr char const *const FCC_BRIDGE =
     "fcc_bridge";  //!< Node name for the FCC bridge node
 
-constexpr char const *const TELEMETRY =
-    "telemetry";  //!< Node name for the telemetry node
-
 const std::set<std::string> VALID_CONTROL_NODE_NAMES{
     MISSION_CONTROL, WAYPOINT,
     QRCODE_SCANNER};  //!< Names of nodes that are allowed to be passed
