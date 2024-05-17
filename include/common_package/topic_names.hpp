@@ -1,9 +1,7 @@
 #pragma once
 
-namespace common_lib {
-
-namespace topic_names {
-// Topic names by there message names
+namespace common_lib::topic_names {
+// Topic names by their message names
 
 // FCC Bridge
 constexpr const char* const BatteryState = "uav_battery_state";
@@ -27,6 +25,4 @@ constexpr const char* const MissionStart = "mission_start";
 // Marker Detection
 constexpr const char* const QRCodeInfo = "qr_code_info";
 
-}  // namespace topic_names
-
-}  // namespace common_lib
+}  // namespace common_lib::topic_names

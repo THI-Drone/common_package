@@ -12,7 +12,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "topic_names.hpp"
 
-
 // Message includes
 #include "interfaces/msg/heartbeat.hpp"
 #include "interfaces/msg/job_finished.hpp"
@@ -36,6 +35,15 @@ class CommonNode : public rclcpp::Node {
     CommonNode(const std::string &id,
                const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
         : Node(id, options) {
+        // Check if node name was changed through the node options
+        if (this->get_name() != id) {
+            RCLCPP_FATAL(this->get_logger(),
+                         "CommonNode::%s: Renaming of nodes at runtime is not "
+                         "supported!",
+                         __func__);
+            std::exit(EXIT_FAILURE);
+        }
+
         /// Create a publisher for the "heartbeat" topic
         heartbeat_publisher =
             this->create_publisher<interfaces::msg::Heartbeat>(
