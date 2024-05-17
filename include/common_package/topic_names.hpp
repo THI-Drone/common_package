@@ -3,7 +3,7 @@
 namespace common_lib {
 
 namespace topic_names {
-// Topic names by there message names
+// Topic names by their message names
 
 // FCC Bridge
 constexpr const char* const BatteryState = "uav_battery_state";
