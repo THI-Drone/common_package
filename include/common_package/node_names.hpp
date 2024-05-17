@@ -5,6 +5,8 @@
 #ifndef THI_DRONE_WS_NODE_NAMES_HPP
 #define THI_DRONE_WS_NODE_NAMES_HPP
 
+#include <set>
+
 namespace common_lib::node_names {
 
 constexpr char const *const MISSION_CONTROL =
@@ -21,6 +23,11 @@ constexpr char const *const FCC_BRIDGE =
 
 constexpr char const *const TELEMETRY =
     "telemetry"; /**< Node name for the telemetry node */
+
+const std::set<std::string> VALID_CONTROL_NODE_NAMES{
+    MISSION_CONTROL, WAYPOINT,
+    QRCODE_DETECTION}; /**< Names of nodes that are allowed to be passed control
+                        */
 
 }  // namespace common_lib::node_names
 
