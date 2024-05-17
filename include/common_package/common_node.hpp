@@ -71,6 +71,16 @@ class CommonNode : public rclcpp::Node {
     CommonNode(const std::string &id,
                rclcpp::NodeOptions options = rclcpp::NodeOptions())
         : Node(id, options.rosout_qos(ROSOUT_QOS)) {
+        // Check if node name was changed through the node options
+        if (this->get_name() != id) {
+            RCLCPP_FATAL(this->get_logger(),
+                         "CommonNode::%s: Renaming of nodes at runtime is not "
+                         "supported!",
+                         __func__);
+
+            std::exit(EXIT_FAILURE);
+        }
+
         /// Create a publisher for the "heartbeat" topic
         heartbeat_publisher =
             this->create_publisher<interfaces::msg::Heartbeat>(
