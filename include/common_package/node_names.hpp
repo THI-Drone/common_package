@@ -2,8 +2,7 @@
 // Created by Johan <job8197@thi.de> on 17.05.2024.
 //
 
-#ifndef THI_DRONE_WS_NODE_NAMES_HPP
-#define THI_DRONE_WS_NODE_NAMES_HPP
+#pragma once
 
 #include <set>
 
@@ -30,5 +29,3 @@ const std::set<std::string> VALID_CONTROL_NODE_NAMES{
                         */
 
 }  // namespace common_lib::node_names
-
-#endif  // THI_DRONE_WS_NODE_NAMES_HPP
