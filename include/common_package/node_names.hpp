@@ -5,6 +5,7 @@
 #pragma once
 
 #include <set>
+#include <string>
 
 namespace common_lib::node_names {
 
