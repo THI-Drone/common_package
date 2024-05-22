@@ -19,6 +19,39 @@
 using namespace std::chrono_literals;
 
 namespace common_lib {
+
+namespace {
+
+/**
+ * @brief rosout QoS to explicitly set the rosout for Nodes subclassing
+ * CommonNode
+ *
+ * See:
+ * 1.
+ * https://docs.ros.org/en/humble/p/rclcpp/generated/classrclcpp_1_1QoS.html#_CPPv4N6rclcpp3QoSE
+ * 2.
+ * https://docs.ros.org/en/humble/p/rclcpp/generated/structrclcpp_1_1QoSInitialization.html#_CPPv4N6rclcpp17QoSInitializationE
+ * 3.
+ * https://docs.ros.org/en/humble/p/rmw/generated/structrmw__qos__profile__s.html#_CPPv417rmw_qos_profile_s
+ * 4. https://design.ros2.org/articles/qos_deadline_liveliness_lifespan.html
+ */
+const rclcpp::QoS ROSOUT_QOS{
+    rclcpp::KeepLast(1), /**< Ignored */
+    rmw_qos_profile_t{
+        rmw_qos_history_policy_t::RMW_QOS_POLICY_HISTORY_KEEP_LAST,
+        1,
+        rmw_qos_reliability_policy_t::RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
+        rmw_qos_durability_policy_t::RMW_QOS_POLICY_DURABILITY_VOLATILE,
+        rmw_time_t{0, 0},
+        rmw_time_t{1, 0},
+        rmw_qos_liveliness_policy_t::RMW_QOS_POLICY_LIVELINESS_AUTOMATIC,
+        RMW_DURATION_INFINITE,
+        false,
+    } /**< This struct holds the default values for the QoS */
+};
+
+}  // namespace
+
 /**
  * @class CommonNode
  * @brief A class representing a common node.
@@ -31,16 +64,20 @@ class CommonNode : public rclcpp::Node {
     /**
      * @brief Constructor for creating a new CommonNode.
      * @param id Unique name of the node.
+     * @param options Optional NodeOptions
+     *
+     * @warning This constructor overrides the rosout QoS!
      */
     CommonNode(const std::string &id,
-               const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
-        : Node(id, options) {
+               rclcpp::NodeOptions options = rclcpp::NodeOptions())
+        : Node(id, options.rosout_qos(ROSOUT_QOS)) {
         // Check if node name was changed through the node options
         if (this->get_name() != id) {
             RCLCPP_FATAL(this->get_logger(),
                          "CommonNode::%s: Renaming of nodes at runtime is not "
                          "supported!",
                          __func__);
+
             std::exit(EXIT_FAILURE);
         }
 

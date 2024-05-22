@@ -46,7 +46,7 @@ TEST(common_package, job_finished_successfull) {
     rclcpp::Subscription<interfaces::msg::JobFinished>::SharedPtr
         job_finished_sub =
             test_node->create_subscription<interfaces::msg::JobFinished>(
-                "job_finished", 10,
+                topic_names::JobFinished, 10,
                 [common_node, test_node,
                  &executor](interfaces::msg::JobFinished::ConstSharedPtr msg) {
                     RCLCPP_DEBUG(test_node->get_logger(),
@@ -87,7 +87,7 @@ TEST(common_package, job_finished_error_message) {
     rclcpp::Subscription<interfaces::msg::JobFinished>::SharedPtr
         job_finished_sub =
             test_node->create_subscription<interfaces::msg::JobFinished>(
-                "job_finished", 10,
+                topic_names::JobFinished, 10,
                 [common_node, test_node,
                  &executor](interfaces::msg::JobFinished::ConstSharedPtr msg) {
                     RCLCPP_DEBUG(test_node->get_logger(),
@@ -132,7 +132,7 @@ TEST(common_package, job_finished_custom_payload) {
     rclcpp::Subscription<interfaces::msg::JobFinished>::SharedPtr
         job_finished_sub =
             test_node->create_subscription<interfaces::msg::JobFinished>(
-                "job_finished", 10,
+                topic_names::JobFinished, 10,
                 [common_node, test_node,
                  &executor](interfaces::msg::JobFinished::ConstSharedPtr msg) {
                     RCLCPP_DEBUG(test_node->get_logger(),
