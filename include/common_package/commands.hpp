@@ -365,6 +365,25 @@ class CommandDefinitions {
     }
 
     /**
+     * Retrieves the command definition for the "set_marker" command.
+     *
+     * This function returns a map containing the definition of the "set_marker"
+     * command. The map is structured as follows:
+     *   - Key: A string representing the name of the marker.
+     *   - Value: A JsonKeyDefinition object representing the definition of the
+     * marker.
+     *
+     * @return A map containing the definition of the "set_marker" command.
+     */
+    static const std::map<const std::string, const JsonKeyDefinition>
+    get_set_marker_command_definition() {
+        const std::map<const std::string, const JsonKeyDefinition> definition{
+            {"marker_name", {true, string}}};
+
+        return definition;
+    }
+
+    /**
      * Retrieves the definition for a given command type.
      *
      * @param type The type of the command.
@@ -378,6 +397,8 @@ class CommandDefinitions {
             return get_waypoint_command_definition();
         else if (type == "detect_marker")
             return get_detect_marker_command_definition();
+        else if (type == "set_marker")
+            return get_set_marker_command_definition();
         else if (type == "end_mission")
             return {};
         else
