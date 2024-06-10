@@ -11,5 +11,5 @@ constexpr float MAX_HORIZONTAL_SPEED_MPS =
 constexpr float MAX_VERTICAL_SPEED_MPS =
     3.0 /* [m/s] */;  //!< Maximum allowed vertical speed in m/s
 constexpr float MIN_SOC_PERCENT =
-    30.0 /* [%] */;  //!< Minimum SOC after which a RTH is triggered
+    20.0 /* [%] */;  //!< Minimum SOC after which a RTH is triggered
 }  // namespace common_lib

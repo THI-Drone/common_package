@@ -76,7 +76,7 @@ nlohmann::json CommandDefinitions::parse_check_json(
                 if (unknown_key_found) unknown_keys += ", ";
 
                 unknown_key_found = true;
-                unknown_keys += key;
+                unknown_keys += "'" + key + "'";
             }
         }
 
